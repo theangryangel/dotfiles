@@ -45,6 +45,7 @@ endif
 if osys == "windows" && has("gui_running")
 	syntax on
 	set hlsearch
+	set directory=.,$TEMP
 endif
 
 if has("autocmd")
