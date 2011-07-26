@@ -11,8 +11,12 @@ set nocompatible
 set nobackup
 set number
 set nowrap
+
+set shiftwidth=4
 set tabstop=4
 set shiftwidth=4
+set textwidth=80
+
 set statusline=%<%F%h%m%r%=\[%B\]\ %l,%c%V\ %P
 set laststatus=2
 set showcmd
@@ -26,9 +30,9 @@ set backspace=indent,eol,start
 let maplocalleader=","
 
 " Platform specific
-if has("win32") || has("win16")
+if has("win32") 
 	let osys="windows"
-	
+
 	behave mswin
 	source $VIMRUNTIME/mswin.vim
 else
@@ -56,7 +60,7 @@ if has("autocmd")
 
 	filetype plugin indent on
 else
-  set autoindent
+	set autoindent
 endif
 
 if &term == "xterm"
