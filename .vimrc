@@ -106,3 +106,13 @@ map <LocalLeader>ks :%s/\s\+$//g<CR>
 " Convert 4 spaces to tabs. Yes, I love the tabs. Sorry.
 map <LocalLeader>kt :%s/    /\t/g<CR>
 
+" PHP doc
+source ~/.vim/php-doc.vim 
+let g:pdv_cfg_Type = "mixed"
+let g:pdv_cfg_Package = ""
+let g:pdv_cfg_Version = "$id$"
+let g:pdv_cfg_Author = "Karl Southern"
+let g:pdv_cfg_Copyright = ""
+let g:pdv_cfg_License = ""
+
+map <LocalLeader>d :call PhpDocSingle()<CR>i 
