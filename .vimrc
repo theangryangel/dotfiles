@@ -86,6 +86,32 @@ else
 		map <silent> <PageDown> 1000<C-D>
 		imap <silent> <PageUp> <C-O>1000<C-U>
 		imap <silent> <PageDown> <C-O>1000<C-D>
+
+		if has("gui")
+			" Only for the gui, because
+			" 1. I'm trained not to use ctrl+X in a terminal
+			" 2. I seem to be trained to use ctrl+x everywhere else. Gordamnit
+			" Windows-style Ctrl+X keys because I suck
+			" First, remap <C-Q> to what <C-V> used to do (inserting special
+			" characters)
+			noremap <C-Q> <C-V> 
+			" Now remap our keys
+			" Copy
+			vnoremap <C-C> "+y
+			vnoremap <C-Insert> "+y
+			" Paste
+			map <S-Insert> "+gP
+			map <C-V> "+gP
+			" Probably not the best way to do it, but the most reliable I can
+			" see
+			imap <C-V> <ESC>"+gP<ESC>a
+			vmap <C-V> "+gP<ESC>a
+			vmap <S-Insert> <C-V>
+			" Saving
+			noremap <C-S> :update<CR>
+			vnoremap <C-S> <C-C>:update<CR>
+			inoremap <C-S> <C-O>:update<CR>
+		endif
 	endif
 endif
 
