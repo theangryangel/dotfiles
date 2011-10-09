@@ -72,8 +72,6 @@ if &term == "xterm"
 	map [25~ :1<CR>
 else
 	if osys != "windows"
-		" Convenient saving!
-		map <C-s> :w<CR>
 		" Delete
 		map [3~ x
 		imap [3~  
