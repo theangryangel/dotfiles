@@ -27,51 +27,24 @@ set nowarn
 set ignorecase
 set smartcase
 set backspace=indent,eol,start
+set hlsearch
 let maplocalleader=","
 
 " Platform specific
-if has("win32") 
-	let osys="windows"
-
+if has("win32")
 	behave mswin
 	source $VIMRUNTIME/mswin.vim
-else
-	let osys=system('uname -s')
-endif
 
-if &t_Co > 2
-	set bg=dark
-	syntax on
-	highlight Comment term=bold ctermfg=2
-	highlight Constant term=underline ctermfg=7
-endif
-
-if osys == "windows" && has("gui_running")
-	syntax on
-	set hlsearch
 	set directory=.,$TEMP
-endif
-
-if has("autocmd")
-	" When editing a file, always jump to the last known cursor position.
-	" Don't do it when the position is invalid or when inside an event handler
-	" (happens when dropping a file on gvim).
-	autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif 
-
-	filetype plugin indent on
 else
-	set autoindent
-endif
-
-if &term == "xterm"
-	" Delete
-	map  x
-	" End
-	map [26~ 100%
-	" Home
-	map [25~ :1<CR>
-else
-	if osys != "windows"
+	if &term == "xterm"
+		" Delete
+		map  x
+		" End
+		map [26~ 100%
+		" Home
+		map [25~ :1<CR>
+	else
 		" Delete
 		map [3~ x
 		imap [3~  
@@ -113,7 +86,25 @@ else
 	endif
 endif
 
-" Use F4 to switch between hex and text editing
+" Terminal colours
+if &t_Co > 2
+	set bg=dark
+	syntax on
+	highlight Comment term=bold ctermfg=2
+	highlight Constant term=underline ctermfg=7
+endif
+
+if has("autocmd")
+	" When editing a file, always jump to the last known cursor position.
+	" Don't do it when the position is invalid or when inside an event handler
+	" (happens when dropping a file on gvim).
+	autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif 
+
+	filetype plugin indent on
+else
+	set autoindent
+endif
+
 function Fxxd()
 	let c=getline(".")
 	if c =~ '^[0-9a-f]\{7}:'
@@ -122,6 +113,8 @@ function Fxxd()
 		:%!xxd -g4
 	endif
 endfunction
+
+" Convert to a hex output
 map <LocalLeader>hex :call Fxxd()<CR>
 
 " Kill trailing whitespace
@@ -139,4 +132,5 @@ let g:pdv_cfg_Author = "Karl Southern"
 let g:pdv_cfg_Copyright = ""
 let g:pdv_cfg_License = ""
 
+" Add our docblocks
 map <LocalLeader>d :call PhpDocSingle()<CR>i 
