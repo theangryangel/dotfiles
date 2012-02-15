@@ -30,6 +30,8 @@ set backspace=indent,eol,start
 set hlsearch
 let maplocalleader=","
 
+set gfn=Bitstream\ Vera\ Sans\ Mono:h11
+
 syntax on
 
 set encoding=utf-8
