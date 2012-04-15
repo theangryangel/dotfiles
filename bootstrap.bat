@@ -5,12 +5,14 @@
 goto batch_file
 EOF
 
-ln -s .gitconfig ~/.gitconfig
-ln -s .gitignore ~/.gitignore
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-ln -s .vim ~/.vim
-ln -s .vimrc ~/.vimrc
-ln -s .screen ~/.screen
+ln -sf $dir/.gitconfig ~/.gitconfig
+ln -sf $dir/.gitignore ~/.gitignore
+
+ln -sf $dir/.vim ~/.vim
+ln -sf $dir/.vimrc ~/.vimrc
+ln -sf $dir/.screen ~/.screen
 
 ln -s bin ~/bin
 exit
