@@ -4,6 +4,9 @@
 "  * Alex Reisner - http://github.com/alexreisner/dotfiles/blob/master/.vimrc 
 "  * Ryan Kinderman - http://github.com/ryankinderman/dotfiles/blob/master/vimrc 
 
+" Add pathogen
+call pathogen#infect()
+
 " Basics
 " Use Vim settings. First, because it changes other options as a side effect.
 set nocompatible
