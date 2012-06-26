@@ -53,6 +53,11 @@ else
 	imap <silent> <PageUp> <C-O>1000<C-U>
 	imap <silent> <PageDown> <C-O>1000<C-D>
 
+	" My poor eyes :(
+	if has("gui_macvim")
+		set gfn=Bitstream\ Vera\ Sans\ Mono:h12
+	endif
+
 	if has("gui")
 		" Only for the gui, because
 		" 1. I'm trained not to use ctrl+X in a terminal
