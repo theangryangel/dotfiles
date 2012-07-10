@@ -33,12 +33,21 @@ set backspace=indent,eol,start
 set hlsearch
 let maplocalleader=","
 
-set gfn=Bitstream\ Vera\ Sans\ Mono:h11
-
 syntax on
 
 set encoding=utf-8
 set fileencoding=utf-8
+
+" font fun
+if has("gui_running")
+	if has("gui_gtk2")
+		set gfn=Bitstream\ Vera\ Sans\ Mono\ 12
+	elseif has("gui_macvim") 
+		set gfn=Bitstream\ Vera\ Sans\ Mono:h12
+	else
+		set gfn=Bitstream\ Vera\ Sans\ Mono:h11
+	endif
+endif
 
 " Platform specific
 if has("win32")
@@ -52,11 +61,6 @@ else
 	map <silent> <PageDown> 1000<C-D>
 	imap <silent> <PageUp> <C-O>1000<C-U>
 	imap <silent> <PageDown> <C-O>1000<C-D>
-
-	" My poor eyes :(
-	if has("gui_macvim")
-		set gfn=Bitstream\ Vera\ Sans\ Mono:h12
-	endif
 
 	if has("gui")
 		" Only for the gui, because
