@@ -129,6 +129,9 @@ map <LocalLeader>ks :%s/\s\+$//g<CR>
 " Convert 4 spaces to tabs. Yes, I love the tabs. Sorry.
 map <LocalLeader>kt :%s/    /\t/g<CR>
 
+" Fix indenting for the whole file 
+map <LocalLeader>indent mzgg=G`z<CR>
+
 " PHP doc
 source ~/.vim/php-doc.vim 
 let g:pdv_cfg_Type = "mixed"
