@@ -4,6 +4,9 @@
 "  * Alex Reisner - http://github.com/alexreisner/dotfiles/blob/master/.vimrc 
 "  * Ryan Kinderman - http://github.com/ryankinderman/dotfiles/blob/master/vimrc 
 
+" To disable a plugin, add it's bundle name to the following list
+" let g:pathogen_disabled = ["snipmate", "snippets"]
+
 " Add pathogen
 call pathogen#infect()
 
@@ -48,6 +51,8 @@ if has("gui_running")
 		set gfn=Bitstream\ Vera\ Sans\ Mono:h11
 	endif
 endif
+
+snor <bs> <bs>
 
 " Platform specific
 if has("win32")
