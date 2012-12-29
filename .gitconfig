@@ -13,3 +13,6 @@
 	lg = log -p
 	zip = archive --format zip --output
 	smu = submodule foreach git pull origin master
+
+[push]
+	default = matching
