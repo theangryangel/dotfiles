@@ -14,7 +14,10 @@ ln -sf $dir/.vim ~/.vim
 ln -sf $dir/.vimrc ~/.vimrc
 ln -sf $dir/.screen ~/.screen
 
-ln -s bin ~/bin
+ln -sf $dir/.bashrc ~/.bashrc
+ln -sf $dir/.bash_aliases ~/.bash_aliases
+
+ln -s $dir/bin ~/bin
 exit
 
 :batch_file
