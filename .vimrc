@@ -68,29 +68,33 @@ else
 	imap <silent> <PageDown> <C-O>1000<C-D>
 
 	if has("gui")
-		" Only for the gui, because
-		" 1. I'm trained not to use ctrl+X in a terminal
-		" 2. I seem to be trained to use ctrl+x everywhere else. Gordamnit
-		" Windows-style Ctrl+X keys because I suck
-		" First, remap <C-Q> to what <C-V> used to do (inserting special
-		" characters)
-		noremap <C-Q> <C-V> 
-		" Now remap our keys
-		" Copy
-		vnoremap <C-C> "+y
-		vnoremap <C-Insert> "+y
-		" Paste
-		map <S-Insert> "+gP
-		map <C-V> "+gP
-		" Probably not the best way to do it, but the most reliable I can
-		" see
-		imap <C-V> <ESC>"+gP<ESC>a
-		vmap <C-V> "+gP<ESC>a
-		vmap <S-Insert> <C-V>
+		" Bad habits I can't get out of
+
+		" CTRL-A is Select all
+		noremap <C-A> gggH<C-O>G
+		inoremap <C-A> <C-O>gg<C-O>gH<C-O>G
+		cnoremap <C-A> <C-C>gggH<C-O>G
+		onoremap <C-A> <C-C>gggH<C-O>G
+		snoremap <C-A> <C-C>gggH<C-O>G
+		xnoremap <C-A> <C-C>ggVG
+
+		" Ctrl+c, Ctrl+x
+		vmap <C-C> "+yi
+		vmap <C-X> "+c
+
+		" Ctrl+v paste - only works in visual and insert mode in order to
+		" prevent default ctrl+v
+		vmap <C-V> c<ESC>"+p
+		imap <C-v> <C-r><C-o>+
+
 		" Saving
-		noremap <C-S> :update<CR>
-		vnoremap <C-S> <C-C>:update<CR>
-		inoremap <C-S> <C-O>:update<CR>
+		noremap <C-s> :update<CR>
+		vnoremap <C-s> <C-C>:update<CR>
+		inoremap <C-s> <C-O>:update<CR>
+
+		" CTRL-Z is Undo; not in cmdline though
+		noremap <C-Z> u
+		inoremap <C-Z> <C-O>u
 	endif
 endif
 
