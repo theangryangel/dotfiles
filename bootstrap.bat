@@ -12,7 +12,7 @@ ln -sf $dir/.gitignore ~/.gitignore
 
 ln -sf $dir/.vim ~/.vim
 ln -sf $dir/.vimrc ~/.vimrc
-ln -sf $dir/.screen ~/.screen
+ln -sf $dir/.screenrc ~/.screenrc
 
 ln -sf $dir/.bashrc ~/.bashrc
 ln -sf $dir/.bash_aliases ~/.bash_aliases
