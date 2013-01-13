@@ -11,6 +11,10 @@ if [ -d ~/.local/bin ]; then
 	PATH=$PATH:~/.local/bin
 fi
 
+if [ -f ~/.bashrc_local ]; then
+    . ~/.bashrc_local
+fi
+
 export PATH
 
 # don't put duplicate lines or lines starting with space in the history.
