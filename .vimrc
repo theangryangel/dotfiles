@@ -164,3 +164,6 @@ function! AppendModeline()
 endfunction
 
 nnoremap <silent> <LocalLeader>ml :call AppendModeline()<CR>
+
+" I can type :help on my own, thanks.
+noremap <F1> <Esc>
