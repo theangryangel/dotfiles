@@ -34,6 +34,7 @@ set ignorecase
 set smartcase
 set backspace=indent,eol,start
 set hlsearch
+set autoindent
 let maplocalleader=","
 
 syntax on
@@ -116,8 +117,6 @@ if has("autocmd")
 	autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif 
 
 	filetype plugin indent on
-else
-	set autoindent
 endif
 
 function Fxxd()
