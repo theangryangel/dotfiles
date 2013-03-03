@@ -167,3 +167,11 @@ nnoremap <silent> <LocalLeader>ml :call AppendModeline()<CR>
 
 " I can type :help on my own, thanks.
 noremap <F1> <Esc>
+
+" Load matchit.vim, but only if the user hasn't installed a newer version.
+if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
+  runtime! macros/matchit.vim
+endif
+
+" Make Y consistent with C and D. See :help Y.
+nnoremap Y y$
