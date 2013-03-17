@@ -30,3 +30,4 @@ Thumbs.db
 *.swp
 .vim/.netrwhist
 .bashrc_local
+.ssh/
