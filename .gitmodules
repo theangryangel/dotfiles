@@ -16,6 +16,6 @@
 [submodule ".vim/bundle/tabular"]
 	path = .vim/bundle/tabular
 	url = git://github.com/godlygeek/tabular.git
-[submodule ".vim/bundle/vimtodo"]
-	path = .vim/bundle/vimtodo
-	url = git://github.com/mivok/vimtodo.git
+[submodule ".vim/bundle/web-indent"]
+	path = .vim/bundle/web-indent
+	url = https://github.com/lukaszb/vim-web-indent.git
