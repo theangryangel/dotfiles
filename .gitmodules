@@ -16,3 +16,9 @@
 [submodule ".vim/bundle/web-indent"]
 	path = .vim/bundle/web-indent
 	url = https://github.com/lukaszb/vim-web-indent.git
+[submodule ".vim/bundle/vim-snippets"]
+	path = .vim/bundle/vim-snippets
+	url = https://github.com/honza/vim-snippets.git
+[submodule ".vim/bundle/bootstrap-snippets"]
+	path = .vim/bundle/bootstrap-snippets
+	url = https://github.com/bonsaiben/bootstrap-snippets.git
