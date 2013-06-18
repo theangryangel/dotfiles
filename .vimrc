@@ -137,20 +137,11 @@ map <LocalLeader>ks :%s/\s\+$//g<CR>
 " Convert 4 spaces to tabs. Yes, I love the tabs. Sorry.
 map <LocalLeader>kt :%s/    /\t/g<CR>
 
-" Fix indenting for the whole file 
-map <LocalLeader>indent mzgg=G`z<CR>
+" xmllint format
+map <LocalLeader>xml-format :%!xmllint --format -<CR>
 
-" PHP doc
-source ~/.vim/php-doc.vim 
-let g:pdv_cfg_Type = "mixed"
-let g:pdv_cfg_Package = ""
-let g:pdv_cfg_Version = "$id$"
-let g:pdv_cfg_Author = "Karl Southern"
-let g:pdv_cfg_Copyright = ""
-let g:pdv_cfg_License = ""
-
-" Add our docblocks
-map <LocalLeader>d :call PhpDocSingle()<CR>i 
+" Make Y consistent with C and D. See :help Y.
+nnoremap Y y$
 
 " Append modeline after last line in buffer.
 " Use substitute() instead of printf() to handle '%%s' modeline in LaTeX
@@ -171,6 +162,3 @@ noremap <F1> <Esc>
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
   runtime! macros/matchit.vim
 endif
-
-" Make Y consistent with C and D. See :help Y.
-nnoremap Y y$
