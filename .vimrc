@@ -162,3 +162,6 @@ noremap <F1> <Esc>
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
   runtime! macros/matchit.vim
 endif
+
+" Filetype specifics
+autocmd Filetype ruby setlocal ts=2 sts=2 sw=2 expandtab
