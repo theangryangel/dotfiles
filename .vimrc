@@ -101,7 +101,7 @@ endif
 
 " colour schemes
 if &t_Co > 2 || has("gui_running")
-	colorscheme Tomorrow-Night
+	colorscheme molokai
 endif
 
 " terminal specifics
