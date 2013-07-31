@@ -8,3 +8,4 @@ set ftp:ssl-protect-data true
 set ftp:ssl-protect-list true
 set ftp:ssl-protect-fxp true
 set ftp:use-feat false
+set mirror:use-pget-n 4
