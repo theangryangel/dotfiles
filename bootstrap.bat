@@ -18,7 +18,7 @@ ln -sf $dir/.bashrc ~/.bashrc
 ln -sf $dir/.bash_aliases ~/.bash_aliases
 
 ln -s $dir/bin ~/bin
-ln -s $dir/.gemrc ~/.gemrc
+ln -s $dir/.lftp ~/.lftp
 exit
 
 :batch_file
