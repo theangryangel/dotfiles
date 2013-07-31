@@ -1,0 +1,10 @@
+set xfer:log false
+set xfer:disk-full-fatal true
+set xfer:max-redirections 0
+set ssl:verify-certificate false
+set ftp:ssl-allow true
+set ftp:ssl-force true
+set ftp:ssl-protect-data true
+set ftp:ssl-protect-list true
+set ftp:ssl-protect-fxp true
+set ftp:use-feat false
