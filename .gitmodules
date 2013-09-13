@@ -31,3 +31,6 @@
 [submodule ".vim/bundle/markdown"]
 	path = .vim/bundle/markdown
 	url = https://github.com/plasticboy/vim-markdown.git
+[submodule ".vim/bundle/vim-junos-syntax"]
+	path = .vim/bundle/vim-junos-syntax
+	url = https://github.com/ClockworkNet/vim-junos-syntax.git
