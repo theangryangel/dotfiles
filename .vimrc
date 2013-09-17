@@ -102,6 +102,7 @@ endif
 " colour schemes
 if &t_Co > 2 || has("gui_running")
 	colorscheme molokai
+	hi Search guifg=#1B1D1E guibg=#FEFE56
 endif
 
 " terminal specifics
