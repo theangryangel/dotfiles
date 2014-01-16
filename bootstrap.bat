@@ -22,9 +22,17 @@ ln -s $dir/.lftp ~/.lftp
 exit
 
 :batch_file
+del %USERPROFILE%\.gitconfig
 mklink %USERPROFILE%\.gitconfig %cd%\.gitconfig
+
+del %USERPROFILE%\.gitignore
 mklink %USERPROFILE%\.gitignore %cd%\.gitignore
 
+del %USERPROFILE%\_vimrc
 mklink %USERPROFILE%\_vimrc %cd%\.vimrc
+
+rmdir %USERPROFILE%\.vim
 mklink /d %USERPROFILE%\.vim %cd%\.vim
+
+rmdir %USERPROFILE%\vimfiles
 mklink /d %USERPROFILE%\vimfiles %cd%\.vim
