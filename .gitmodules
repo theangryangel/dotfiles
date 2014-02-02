@@ -34,3 +34,9 @@
 [submodule ".vim/bundle/vim-junos-syntax"]
 	path = .vim/bundle/vim-junos-syntax
 	url = https://github.com/ClockworkNet/vim-junos-syntax.git
+[submodule ".vim/bundle/ps1"]
+	path = .vim/bundle/ps1
+	url = https://github.com/PProvost/vim-ps1.git
+[submodule ".vim/bundle/better-css"]
+	path = .vim/bundle/better-css
+	url = https://github.com/ChrisYip/Better-CSS-Syntax-for-Vim.git

@@ -164,5 +164,7 @@ if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
   runtime! macros/matchit.vim
 endif
 
+let g:vim_markdown_folding_disabled=1
+
 " Filetype specifics
 autocmd Filetype ruby,eruby,yaml setlocal ts=2 sts=2 sw=2 expandtab
