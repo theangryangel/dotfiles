@@ -12,7 +12,7 @@ if [ -d ~/.local/bin ]; then
 fi
 
 if [ -f ~/.bashrc_local ]; then
-    . ~/.bashrc_local
+	source ~/.bashrc_local
 fi
 
 export PATH
