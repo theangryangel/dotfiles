@@ -19,9 +19,6 @@
 [submodule ".vim/bundle/vim-snippets"]
 	path = .vim/bundle/vim-snippets
 	url = https://github.com/honza/vim-snippets.git
-[submodule ".vim/bundle/bootstrap-snippets"]
-	path = .vim/bundle/bootstrap-snippets
-	url = https://github.com/bonsaiben/bootstrap-snippets.git
 [submodule ".vim/bundle/ctrlp.vim"]
 	path = .vim/bundle/ctrlp.vim
 	url = https://github.com/kien/ctrlp.vim.git
