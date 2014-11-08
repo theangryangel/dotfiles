@@ -40,3 +40,6 @@
 [submodule ".vim/bundle/cisco.vim"]
 	path = .vim/bundle/cisco.vim
 	url = https://github.com/vim-scripts/cisco.vim.git
+[submodule ".vim/bundle/vim-bootstrap3-snippets"]
+	path = .vim/bundle/vim-bootstrap3-snippets
+	url = https://github.com/chrisgillis/vim-bootstrap3-snippets.git
