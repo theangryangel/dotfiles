@@ -3,6 +3,7 @@
 	email = karl@theangryangel.co.uk
 [core]
 	excludesfile = ~/.gitignore
+	editor = /usr/bin/vim
 
 [alias]
 	st = status
