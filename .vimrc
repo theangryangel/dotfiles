@@ -173,3 +173,6 @@ let NERDTreeShowHidden=1
 
 " Filetype specifics
 autocmd Filetype ruby,eruby,yaml setlocal ts=2 sts=2 sw=2 expandtab
+
+" vim-go specifics
+let g:go_fmt_autosave = 0
