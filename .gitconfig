@@ -15,6 +15,8 @@
 	lg = log -p
 	zip = archive --format zip --output
 	smu = submodule foreach git pull origin master
+	up = !git pull --rebase --prune $@ && git submodule update --init --recursive
+	branchclean = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs -r git branch -d; }; f"
 
 [push]
 	default = matching
