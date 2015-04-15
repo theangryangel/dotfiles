@@ -1,4 +1,4 @@
-# If not running interactively, don't do anything
+# if not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
 # additional local path (OS X)
@@ -67,3 +67,12 @@ fi
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
+
+# custom functions
+function stopwatch(){
+	date1=`date +%s`; 
+	while true; do 
+		echo -ne "$(date -u --date @$((`date +%s` - $date1)) +%H:%M:%S)\r"; 
+		sleep 0.1
+	done
+}
