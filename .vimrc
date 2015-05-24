@@ -25,7 +25,7 @@ set shiftwidth=4  " Width of reindent operations and auto indentation
 set softtabstop=4 " Set spaces for tab in insert mode
 set autoindent    " Enable auto indentation
 
-set statusline=%<%F%h%m%r%=\[%B\]\ %l,%c%V\ %P
+set statusline=%<%F%h%m%r%=\[%B\]\ %l,%c%V\ %P " Default status line. Largely here as a fall back if airline is not available
 set laststatus=2
 set showcmd
 set gcr=a:blinkon0
@@ -188,3 +188,7 @@ let g:go_fmt_autosave = 0
 
 " Undo snipmate's fucking around of my bindings
 snor <bs> <bs> 
+
+" Airline customisation
+let g:airline_left_sep=''
+let g:airline_right_sep=''
