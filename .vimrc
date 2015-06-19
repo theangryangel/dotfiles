@@ -120,6 +120,9 @@ function Fxxd()
     endif
 endfunction
 
+" NerdTree
+map <LocalLeader>nt :NERDTree<CR>
+
 " Convert to a hex output
 map <LocalLeader>hex :call Fxxd()<CR>
 
