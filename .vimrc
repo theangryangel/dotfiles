@@ -25,7 +25,7 @@ set shiftwidth=4  " Width of reindent operations and auto indentation
 set softtabstop=4 " Set spaces for tab in insert mode
 set autoindent    " Enable auto indentation
 
-set statusline=%<%F%h%m%r%=\[%B\]\ %l,%c%V\ %P " Default status line. Largely here as a fall back if airline is not available
+set statusline=%<%F%h%m%r%=\[%B\]\ %l,%c%V\ %P " Default status line. Largely here as a fallback if airline is not available
 set laststatus=2
 set showcmd
 set gcr=a:blinkon0
@@ -147,32 +147,50 @@ endfunction
 
 nnoremap <silent> <LocalLeader>ml :call AppendModeline()<CR>
 
+" Toggle between number and relativenumber
+function! ToggleNumber()
+    if(&relativenumber == 1)
+        set norelativenumber
+        set number
+    else
+        set relativenumber
+    endif
+endfunc
+
+map <LocalLeader>tn :call ToggleNumber()<CR>
+
 " I can type :help on my own, thanks.
 noremap <F1> <Esc>
 
-if has("autocmd")
+" Load filetype-specific indent files
+filetype plugin indent on
+
+" Autocmd group
+augroup configgroup
+    autocmd!
+
     " When editing a file, always jump to the last known cursor position.
     " Don't do it when the position is invalid or when inside an event handler
     " (happens when dropping a file on gvim).
     autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif 
 
-    filetype plugin indent on
-
-    " Filetype specifics
+    " Ruby
     autocmd Filetype ruby,eruby,yaml setlocal ts=2 sts=2 sw=2 expandtab
 
     " Some file types use real tabs
-    autocmd FileType {make,gitconfig} set noexpandtab sw=4
+    autocmd FileType {make,gitconfig} setlocal noexpandtab sw=4
 
     " Treat JSON files like JavaScript
     autocmd BufNewFile,BufRead *.json setf javascript
-    
+
     " Make Python follow PEP8
-    autocmd FileType python set sts=4 ts=4 sw=4 tw=79
-    
+    autocmd FileType python setlocal sts=4 ts=4 sw=4 tw=79
+
     " Make sure all markdown files have the correct filetype
     autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn,txt} setf markdown
-endif
+
+    autocmd BufEnter Makefile setlocal noexpandtab
+augroup END
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
@@ -197,3 +215,11 @@ let g:airline_left_sep=''
 let g:airline_right_sep=''
 " Append the character code to airline_section_z
 let g:airline_section_z = airline#section#create(['windowswap', '%3p%%', 'linenr', ':%3v', ' | 0x%2B'])
+
+" CtrlP settings
+let g:ctrlp_match_window = 'bottom,order:ttb'
+let g:ctrlp_switch_buffer = 0
+let g:ctrlp_working_path_mode = 0
+if executable('ag')
+    let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+endif
