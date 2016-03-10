@@ -1,6 +1,10 @@
 # if not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
+if [ -f ~/.bashrc_local ]; then
+	source ~/.bashrc_local
+fi
+
 # additional local path (OS X)
 if [ -d ~/bin ]; then
 	PATH=$PATH:~/bin
@@ -11,8 +15,14 @@ if [ -d ~/.local/bin ]; then
 	PATH=$PATH:~/.local/bin
 fi
 
-if [ -f ~/.bashrc_local ]; then
-	source ~/.bashrc_local
+# ruby gems path
+if which ruby >/dev/null && which gem >/dev/null; then
+    PATH="$(ruby -rubygems -e 'puts Gem.user_dir')/bin:$PATH"
+fi
+
+# golang
+if [ -n "$GOPATH" ]; then
+    PATH=$PATH:$GOPATH/bin
 fi
 
 export PATH
@@ -67,12 +77,3 @@ fi
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
-
-# custom functions
-function stopwatch(){
-	date1=`date +%s`; 
-	while true; do 
-		echo -ne "$(date -u --date @$((`date +%s` - $date1)) +%H:%M:%S)\r"; 
-		sleep 0.1
-	done
-}
