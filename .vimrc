@@ -16,6 +16,7 @@ set nocompatible " Use Vim settings. First, because it changes other options as 
 set shortmess=atI " Don't show the Vim intro message
 
 set nobackup
+set backupcopy=yes " Fix file watchers
 set number
 set nowrap
 
