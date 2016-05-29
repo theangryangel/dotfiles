@@ -21,9 +21,9 @@ set number
 set nowrap
 
 set expandtab     " Tab in insert mode will produce spaces
-set tabstop=4     " Width of a tab
-set shiftwidth=4  " Width of reindent operations and auto indentation
-set softtabstop=4 " Set spaces for tab in insert mode
+set tabstop=2     " Width of a tab
+set shiftwidth=2  " Width of reindent operations and auto indentation
+set softtabstop=2 " Set spaces for tab in insert mode
 set autoindent    " Enable auto indentation
 
 set statusline=%<%F%h%m%r%=\[%B\]\ %l,%c%V\ %P " Default status line. Largely here as a fallback if airline is not available
@@ -59,66 +59,66 @@ let maplocalleader=","
 
 " font fun
 if has("gui_running")
-    if has("gui_gtk2")
-        set gfn=Bitstream\ Vera\ Sans\ Mono\ 12
-    elseif has("gui_macvim") 
-        set gfn=Bitstream\ Vera\ Sans\ Mono:h12
-    else
-        set gfn=Bitstream\ Vera\ Sans\ Mono:h11
-    endif
+  if has("gui_gtk2")
+    set gfn=Bitstream\ Vera\ Sans\ Mono\ 12
+  elseif has("gui_macvim") 
+    set gfn=Bitstream\ Vera\ Sans\ Mono:h12
+  else
+    set gfn=Bitstream\ Vera\ Sans\ Mono:h11
+  endif
 endif
 
 " Platform specific
 if has("win32")
-    behave mswin
-    source $VIMRUNTIME/mswin.vim
+  behave mswin
+  source $VIMRUNTIME/mswin.vim
 
-    set directory=.,$TEMP
+  set directory=.,$TEMP
 else
-    " Better Page Up and Down emulators
-    map <silent> <PageUp> 1000<C-U>
-    map <silent> <PageDown> 1000<C-D>
-    imap <silent> <PageUp> <C-O>1000<C-U>
-    imap <silent> <PageDown> <C-O>1000<C-D>
+  " Better Page Up and Down emulators
+  map <silent> <PageUp> 1000<C-U>
+  map <silent> <PageDown> 1000<C-D>
+  imap <silent> <PageUp> <C-O>1000<C-U>
+  imap <silent> <PageDown> <C-O>1000<C-D>
 
-    if has("gui")
-        " Bad habits I can't get out of
+  if has("gui")
+    " Bad habits I can't get out of
 
-        " CTRL-A is Select all
-        noremap <C-A> gggH<C-O>G
-        inoremap <C-A> <C-O>gg<C-O>gH<C-O>G
-        cnoremap <C-A> <C-C>gggH<C-O>G
-        onoremap <C-A> <C-C>gggH<C-O>G
-        snoremap <C-A> <C-C>gggH<C-O>G
-        xnoremap <C-A> <C-C>ggVG
+    " CTRL-A is Select all
+    noremap <C-A> gggH<C-O>G
+    inoremap <C-A> <C-O>gg<C-O>gH<C-O>G
+    cnoremap <C-A> <C-C>gggH<C-O>G
+    onoremap <C-A> <C-C>gggH<C-O>G
+    snoremap <C-A> <C-C>gggH<C-O>G
+    xnoremap <C-A> <C-C>ggVG
 
-        " Ctrl+c, Ctrl+x
-        vmap <C-C> "+yi
-        vmap <C-X> "+c
+    " Ctrl+c, Ctrl+x
+    vmap <C-C> "+yi
+    vmap <C-X> "+c
 
-        " Ctrl+v paste - only works in visual and insert mode in order to
-        " prevent default ctrl+v
-        vmap <C-V> c<ESC>"+p
-        imap <C-v> <C-r><C-o>+
+    " Ctrl+v paste - only works in visual and insert mode in order to
+    " prevent default ctrl+v
+    vmap <C-V> c<ESC>"+p
+    imap <C-v> <C-r><C-o>+
 
-        " Saving
-        noremap <C-s> :update<CR>
-        vnoremap <C-s> <C-C>:update<CR>
-        inoremap <C-s> <C-O>:update<CR>
+    " Saving
+    noremap <C-s> :update<CR>
+    vnoremap <C-s> <C-C>:update<CR>
+    inoremap <C-s> <C-O>:update<CR>
 
-        " CTRL-Z is Undo; not in cmdline though
-        noremap <C-Z> u
-        inoremap <C-Z> <C-O>u
-    endif
+    " CTRL-Z is Undo; not in cmdline though
+    noremap <C-Z> u
+    inoremap <C-Z> <C-O>u
+  endif
 endif
 
 function Fxxd()
-    let c=getline(".")
-    if c =~ '^[0-9a-f]\{7}:'
-        :%!xxd -r
-    else
-        :%!xxd -g4
-    endif
+  let c=getline(".")
+  if c =~ '^[0-9a-f]\{7}:'
+    :%!xxd -r
+  else
+    :%!xxd -g4
+  endif
 endfunction
 
 " NerdTree
@@ -140,22 +140,22 @@ nnoremap Y y$
 " Use substitute() instead of printf() to handle '%%s' modeline in LaTeX
 " files.
 function! AppendModeline()
-    let l:modeline = printf(" vim: set ts=%d sw=%d tw=%d :",
-                \ &tabstop, &shiftwidth, &textwidth)
-    let l:modeline = substitute(&commentstring, "%s", l:modeline, "")
-    call append(line("$"), l:modeline)
+  let l:modeline = printf(" vim: set ts=%d sw=%d tw=%d :",
+        \ &tabstop, &shiftwidth, &textwidth)
+  let l:modeline = substitute(&commentstring, "%s", l:modeline, "")
+  call append(line("$"), l:modeline)
 endfunction
 
 nnoremap <silent> <LocalLeader>ml :call AppendModeline()<CR>
 
 " Toggle between number and relativenumber
 function! ToggleNumber()
-    if(&relativenumber == 1)
-        set norelativenumber
-        set number
-    else
-        set relativenumber
-    endif
+  if(&relativenumber == 1)
+    set norelativenumber
+    set number
+  else
+    set relativenumber
+  endif
 endfunc
 
 map <LocalLeader>tn :call ToggleNumber()<CR>
@@ -168,34 +168,31 @@ filetype plugin indent on
 
 " Autocmd group
 augroup configgroup
-    autocmd!
+  autocmd!
 
-    " When editing a file, always jump to the last known cursor position.
-    " Don't do it when the position is invalid or when inside an event handler
-    " (happens when dropping a file on gvim).
-    autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif 
+  " When editing a file, always jump to the last known cursor position.
+  " Don't do it when the position is invalid or when inside an event handler
+  " (happens when dropping a file on gvim).
+  autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif 
 
-    " Ruby
-    autocmd Filetype ruby,eruby,yaml setlocal ts=2 sts=2 sw=2 expandtab
+  " Some file types use real tabs
+  autocmd FileType {make,gitconfig} setlocal noexpandtab sw=4
 
-    " Some file types use real tabs
-    autocmd FileType {make,gitconfig} setlocal noexpandtab sw=4
+  " Treat JSON files like JavaScript
+  autocmd BufNewFile,BufRead *.json setf javascript
 
-    " Treat JSON files like JavaScript
-    autocmd BufNewFile,BufRead *.json setf javascript
+  " Make Python follow PEP8
+  autocmd FileType python setlocal sts=4 ts=4 sw=4 tw=79
 
-    " Make Python follow PEP8
-    autocmd FileType python setlocal sts=4 ts=4 sw=4 tw=79
+  " Make sure all markdown files have the correct filetype
+  autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn,txt} setf markdown
 
-    " Make sure all markdown files have the correct filetype
-    autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn,txt} setf markdown
-
-    autocmd BufEnter Makefile setlocal noexpandtab
+  autocmd BufEnter Makefile setlocal noexpandtab
 augroup END
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
 if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
-    runtime! macros/matchit.vim
+  runtime! macros/matchit.vim
 endif
 
 " Disable autofolding of markdown
@@ -222,5 +219,5 @@ let g:ctrlp_match_window = 'bottom,order:ttb'
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_working_path_mode = 0
 if executable('ag')
-    let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+  let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 endif
