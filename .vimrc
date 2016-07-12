@@ -60,11 +60,11 @@ let maplocalleader=","
 " font fun
 if has("gui_running")
   if has("gui_gtk2")
-    set gfn=Bitstream\ Vera\ Sans\ Mono\ 12
+    set gfn=DejaVu\ Sans\ Mono\ 12
   elseif has("gui_macvim") 
-    set gfn=Bitstream\ Vera\ Sans\ Mono:h12
+    set gfn=DejaVu\ Sans\ Mono:h12
   else
-    set gfn=Bitstream\ Vera\ Sans\ Mono:h11
+    set gfn=DejaVu\ Sans\ Mono:h11
   endif
 endif
 
