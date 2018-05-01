@@ -19,6 +19,10 @@ ln -sf $dir/.bash_aliases ~/.bash_aliases
 
 ln -s $dir/bin ~/bin
 ln -s $dir/.lftp ~/.lftp
+
+mkdir -p ~/.config/nvim
+
+ln -s $dir/.config/nvim/init.vim ~/.config/nvim/init.vim
 exit
 
 :batch_file

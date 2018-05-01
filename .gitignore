@@ -31,3 +31,4 @@ Thumbs.db
 .vim/.netrwhist
 .bashrc_local
 .ssh/
+.vim/swap
