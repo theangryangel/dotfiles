@@ -35,9 +35,12 @@ mklink %USERPROFILE%\.gitignore %cd%\.gitignore
 
 del %USERPROFILE%\_vimrc
 mklink %USERPROFILE%\_vimrc %cd%\.vimrc
+mklink %USERPROFILE%\.vimrc %cd%\.vimrc
 
 rmdir %USERPROFILE%\.vim
 mklink /d %USERPROFILE%\.vim %cd%\.vim
 
 rmdir %USERPROFILE%\vimfiles
 mklink /d %USERPROFILE%\vimfiles %cd%\.vim
+
+mklink /d %LOCALAPPDATA%\nvim %cd%\.config\nvim
