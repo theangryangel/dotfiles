@@ -8,6 +8,10 @@
 " To disable a plugin, add it's bundle name to the following list
 " let g:pathogen_disabled = ["snipmate", "snippets"]
 
+let g:pathogen_disabled = []
+
+let g:airline#extensions#coc#enabled = 1
+
 " Add pathogen
 call pathogen#infect()
 
@@ -44,6 +48,9 @@ set smartcase  " ...unless they contain at least one uppercase character
 " Split windows below and right instead of above and left
 set splitbelow splitright
 
+" For deoplete/language client
+set hidden
+
 syntax on
 
 " Use UTF-8 without BOM
@@ -51,7 +58,9 @@ set encoding=utf-8 nobomb
 set fileencoding=utf-8 nobomb
 
 " Colourschemes
+"colorscheme vim-monokai-tasty
 colorscheme molokai
+"colorscheme sublimemonokai
 hi Search guifg=#1B1D1E guibg=#FEFE56
 set cursorline " Highlight current line
 
@@ -212,5 +221,5 @@ let g:airline_section_z = airline#section#create(['windowswap', '%3p%%', 'linenr
 let g:deoplete#enable_at_startup = 1
 
 let g:LanguageClient_serverCommands = {
-    \ 'python': ['/usr/bin/pyls'],
+    \ 'python': ['~/.local/bin/pyls']
     \ }

@@ -37,9 +37,10 @@
 [submodule ".vim/bundle/vim-elixir"]
 	path = .vim/bundle/vim-elixir
 	url = https://github.com/elixir-lang/vim-elixir.git
-[submodule ".vim/bundle/deoplete"]
-	path = .vim/bundle/deoplete
-	url = git@github.com:Shougo/deoplete.nvim.git
-[submodule ".vim/bundle/LanguageClient-neovim"]
-	path = .vim/bundle/LanguageClient-neovim
-	url = git@github.com:autozimu/LanguageClient-neovim.git
+[submodule ".vim/bundle/editorconfig-vim"]
+	path = .vim/bundle/editorconfig-vim
+	url = https://github.com/editorconfig/editorconfig-vim.git
+[submodule ".vim/bundle/coc.nvim"]
+	path = .vim/bundle/coc.nvim
+	url = https://github.com/neoclide/coc.nvim.git
+  branch = release
