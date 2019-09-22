@@ -49,7 +49,7 @@ set smartcase  " ...unless they contain at least one uppercase character
 set splitbelow splitright
 
 set hidden
-set signcolumn=yes
+set signcolumn=auto
 set updatetime=300
 
 syntax on
