@@ -17,7 +17,7 @@ call pathogen#infect()
 
 " Basics
 set nocompatible " Use Vim settings. First, because it changes other options as a side effect.
-set shortmess=atI " Don't show the Vim intro message
+set shortmess=atIc " Don't show the Vim intro message
 
 set nobackup
 set backupcopy=yes " Fix file watchers
@@ -48,8 +48,9 @@ set smartcase  " ...unless they contain at least one uppercase character
 " Split windows below and right instead of above and left
 set splitbelow splitright
 
-" For deoplete/language client
 set hidden
+set signcolumn=yes
+set updatetime=300
 
 syntax on
 
@@ -57,62 +58,51 @@ syntax on
 set encoding=utf-8 nobomb
 set fileencoding=utf-8 nobomb
 
-" Colourschemes
-"colorscheme vim-monokai-tasty
 colorscheme molokai
-"colorscheme sublimemonokai
 hi Search guifg=#1B1D1E guibg=#FEFE56
 set cursorline " Highlight current line
 
 let maplocalleader=","
 
-" font fun
-if has("gui_running")
-  set gfn=DejaVu\ Sans\ Mono\ 12
-endif
-
 " Platform specific
 if has("win32")
-  behave mswin
-  source $VIMRUNTIME/mswin.vim
-
   set directory=.,$TEMP
-else
-  " Better Page Up and Down emulators
-  map <silent> <PageUp> 1000<C-U>
-  map <silent> <PageDown> 1000<C-D>
-  imap <silent> <PageUp> <C-O>1000<C-U>
-  imap <silent> <PageDown> <C-O>1000<C-D>
+endif
 
-  if has("gui")
-    " Bad habits I can't get out of
+" Better Page Up and Down emulators
+map <silent> <PageUp> 1000<C-U>
+map <silent> <PageDown> 1000<C-D>
+imap <silent> <PageUp> <C-O>1000<C-U>
+imap <silent> <PageDown> <C-O>1000<C-D>
 
-    " CTRL-A is Select all
-    noremap <C-A> gggH<C-O>G
-    inoremap <C-A> <C-O>gg<C-O>gH<C-O>G
-    cnoremap <C-A> <C-C>gggH<C-O>G
-    onoremap <C-A> <C-C>gggH<C-O>G
-    snoremap <C-A> <C-C>gggH<C-O>G
-    xnoremap <C-A> <C-C>ggVG
+if has("gui")
+  " Bad habits I can't get out of
 
-    " Ctrl+c, Ctrl+x
-    vmap <C-C> "+yi
-    vmap <C-X> "+c
+  " CTRL-A is Select all
+  noremap <C-A> gggH<C-O>G
+  inoremap <C-A> <C-O>gg<C-O>gH<C-O>G
+  cnoremap <C-A> <C-C>gggH<C-O>G
+  onoremap <C-A> <C-C>gggH<C-O>G
+  snoremap <C-A> <C-C>gggH<C-O>G
+  xnoremap <C-A> <C-C>ggVG
 
-    " Ctrl+v paste - only works in visual and insert mode in order to
-    " prevent default ctrl+v
-    vmap <C-V> c<ESC>"+p
-    imap <C-v> <C-r><C-o>+
+  " Ctrl+c, Ctrl+x
+  vmap <C-C> "+yi
+  vmap <C-X> "+c
 
-    " Saving
-    noremap <C-s> :update<CR>
-    vnoremap <C-s> <C-C>:update<CR>
-    inoremap <C-s> <C-O>:update<CR>
+  " Ctrl+v paste - only works in visual and insert mode in order to
+  " prevent default ctrl+v
+  vmap <C-V> c<ESC>"+p
+  imap <C-v> <C-r><C-o>+
 
-    " CTRL-Z is Undo; not in cmdline though
-    noremap <C-Z> u
-    inoremap <C-Z> <C-O>u
-  endif
+  " Saving
+  noremap <C-s> :update<CR>
+  vnoremap <C-s> <C-C>:update<CR>
+  inoremap <C-s> <C-O>:update<CR>
+
+  " CTRL-Z is Undo; not in cmdline though
+  noremap <C-Z> u
+  inoremap <C-Z> <C-O>u
 endif
 
 function Fxxd()
@@ -208,18 +198,8 @@ let NERDTreeShowHidden=1
 " vim-go specifics
 let g:go_fmt_autosave = 0
 
-" Undo snipmate's fucking around of my bindings
-snor <bs> <bs> 
-
 " Airline customisation
 let g:airline_left_sep=''
 let g:airline_right_sep=''
 " Append the character code to airline_section_z
 let g:airline_section_z = airline#section#create(['windowswap', '%3p%%', 'linenr', ':%3v', ' | 0x%2B'])
-
-" Deoplete
-let g:deoplete#enable_at_startup = 1
-
-let g:LanguageClient_serverCommands = {
-    \ 'python': ['~/.local/bin/pyls']
-    \ }
