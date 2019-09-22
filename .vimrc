@@ -9,7 +9,7 @@
 " let g:pathogen_disabled = ["snipmate", "snippets"]
 
 let g:pathogen_disabled = []
-
+let g:coc_global_extensions = ['coc-python', 'coc-eslint', 'coc-snippets', 'coc-git', 'coc-emoji', 'coc-json', 'coc-css', 'coc-html', 'coc-yaml']
 let g:airline#extensions#coc#enabled = 1
 
 " Add pathogen
