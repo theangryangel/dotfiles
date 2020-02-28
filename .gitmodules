@@ -44,3 +44,9 @@
 [submodule ".vim/bundle/ultisnips"]
 	path = .vim/bundle/ultisnips
 	url = https://github.com/SirVer/ultisnips.git
+[submodule ".vim/bundle/nord-vim"]
+	path = .vim/bundle/nord-vim
+	url = https://github.com/arcticicestudio/nord-vim.git
+[submodule ".vim/bundle/onedark.vim"]
+	path = .vim/bundle/onedark.vim
+	url = https://github.com/joshdick/onedark.vim.git

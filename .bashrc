@@ -83,3 +83,15 @@ if [ -f /usr/share/bash-completion/bash_completion ] && ! shopt -oq posix; then
 fi
 
 export COMPOSE_IMPERSONATION='1000:1000'
+
+if [ -x "$(command -v starship)" ]; then
+  unset PROMPT_COMMAND
+  eval "$(starship init bash)"
+fi
+
+export SSH_AUTH_SOCK=~/.ssh/ssh-agent.$HOSTNAME.sock
+ssh-add -l 2>/dev/null >/dev/null
+if [ $? -ge 2 ]; then
+  ssh-agent -a "$SSH_AUTH_SOCK" >/dev/null
+  ssh-add ~/.ssh/id_rsa
+fi

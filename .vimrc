@@ -58,7 +58,16 @@ syntax on
 set encoding=utf-8 nobomb
 set fileencoding=utf-8 nobomb
 
-colorscheme molokai
+"colorscheme molokai
+
+augroup nord-overrides
+  " nord specific override to make comments legible
+  autocmd!
+  autocmd ColorScheme * highlight Comment ctermfg=14
+augroup end
+
+colorscheme nord
+
 hi Search guifg=#1B1D1E guibg=#FEFE56
 set cursorline " Highlight current line
 
