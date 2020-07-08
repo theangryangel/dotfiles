@@ -52,6 +52,7 @@ set hidden
 set signcolumn=auto
 set updatetime=300
 
+filetype plugin on
 syntax on
 
 " Use UTF-8 without BOM
