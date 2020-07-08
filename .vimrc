@@ -209,7 +209,7 @@ let NERDTreeShowHidden=1
 let g:go_fmt_autosave = 0
 
 " Airline customisation
-let g:airline_left_sep=''
-let g:airline_right_sep=''
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
 " Append the character code to airline_section_z
 let g:airline_section_z = airline#section#create(['windowswap', '%3p%%', 'linenr', ':%3v', ' | 0x%2B'])
