@@ -6,7 +6,7 @@
 "  * Greg Stallings - https://github.com/gregstallings/vimfiles/blob/master/vimrc
 
 " To disable a plugin, add it's bundle name to the following list
-" let g:pathogen_disabled = ["snipmate", "snippets"]
+" let g:pathogen_disabled = []
 
 let g:pathogen_disabled = []
 let g:coc_global_extensions = ['coc-python', 'coc-eslint', 'coc-snippets', 'coc-git', 'coc-emoji', 'coc-json', 'coc-css', 'coc-html', 'coc-yaml', 'coc-prettier']
@@ -24,6 +24,9 @@ set backupcopy=yes " Fix file watchers
 set number
 set nowrap
 
+set termguicolors
+
+set title         " Set terminal window
 set expandtab     " Tab in insert mode will produce spaces
 set tabstop=2     " Width of a tab
 set shiftwidth=2  " Width of reindent operations and auto indentation
@@ -44,6 +47,7 @@ set hlsearch   " Highlight searches
 set incsearch  " Highlight dynamically as pattern is typed
 set ignorecase " Make searches case-insensitive...
 set smartcase  " ...unless they contain at least one uppercase character
+set lazyredraw " Do not redraw on registers and macros
 
 " Split windows below and right instead of above and left
 set splitbelow splitright
@@ -85,36 +89,6 @@ map <silent> <PageDown> 1000<C-D>
 imap <silent> <PageUp> <C-O>1000<C-U>
 imap <silent> <PageDown> <C-O>1000<C-D>
 
-if has("gui")
-  " Bad habits I can't get out of
-
-  " CTRL-A is Select all
-  noremap <C-A> gggH<C-O>G
-  inoremap <C-A> <C-O>gg<C-O>gH<C-O>G
-  cnoremap <C-A> <C-C>gggH<C-O>G
-  onoremap <C-A> <C-C>gggH<C-O>G
-  snoremap <C-A> <C-C>gggH<C-O>G
-  xnoremap <C-A> <C-C>ggVG
-
-  " Ctrl+c, Ctrl+x
-  vmap <C-C> "+yi
-  vmap <C-X> "+c
-
-  " Ctrl+v paste - only works in visual and insert mode in order to
-  " prevent default ctrl+v
-  vmap <C-V> c<ESC>"+p
-  imap <C-v> <C-r><C-o>+
-
-  " Saving
-  noremap <C-s> :update<CR>
-  vnoremap <C-s> <C-C>:update<CR>
-  inoremap <C-s> <C-O>:update<CR>
-
-  " CTRL-Z is Undo; not in cmdline though
-  noremap <C-Z> u
-  inoremap <C-Z> <C-O>u
-endif
-
 function Fxxd()
   let c=getline(".")
   if c =~ '^[0-9a-f]\{7}:'
@@ -130,26 +104,8 @@ map <LocalLeader>nt :NERDTree<CR>
 " Convert to a hex output
 map <LocalLeader>hex :call Fxxd()<CR>
 
-" Kill trailing whitespace
-map <LocalLeader>ks :%s/\s\+$//g<CR>
-
-" xmllint format
-map <LocalLeader>xml-format :%!xmllint --format -<CR>
-
 " Make Y consistent with C and D. See :help Y.
 nnoremap Y y$
-
-" Append modeline after last line in buffer.
-" Use substitute() instead of printf() to handle '%%s' modeline in LaTeX
-" files.
-function! AppendModeline()
-  let l:modeline = printf(" vim: set ts=%d sw=%d tw=%d :",
-        \ &tabstop, &shiftwidth, &textwidth)
-  let l:modeline = substitute(&commentstring, "%s", l:modeline, "")
-  call append(line("$"), l:modeline)
-endfunction
-
-nnoremap <silent> <LocalLeader>ml :call AppendModeline()<CR>
 
 " Toggle between number and relativenumber
 function! ToggleNumber()
