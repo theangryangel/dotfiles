@@ -47,7 +47,6 @@ set hlsearch   " Highlight searches
 set incsearch  " Highlight dynamically as pattern is typed
 set ignorecase " Make searches case-insensitive...
 set smartcase  " ...unless they contain at least one uppercase character
-set lazyredraw " Do not redraw on registers and macros
 
 " Split windows below and right instead of above and left
 set splitbelow splitright
@@ -99,6 +98,7 @@ function Fxxd()
 endfunction
 
 " NerdTree
+let g:NERDTreeHijackNetrw=1
 map <LocalLeader>nt :NERDTree<CR>
 
 " Convert to a hex output
