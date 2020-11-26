@@ -50,3 +50,6 @@
 [submodule ".vim/bundle/dracula-vim"]
 	path = .vim/bundle/dracula-vim
 	url = https://github.com/dracula/vim.git
+[submodule ".vim/bundle/vim-fugitive"]
+	path = .vim/bundle/vim-fugitive
+	url = https://github.com/tpope/vim-fugitive.git
