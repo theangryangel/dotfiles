@@ -53,3 +53,6 @@
 [submodule ".vim/bundle/vim-fugitive"]
 	path = .vim/bundle/vim-fugitive
 	url = https://github.com/tpope/vim-fugitive.git
+[submodule ".vim/bundle/vista.vim"]
+	path = .vim/bundle/vista.vim
+	url = https://github.com/liuchengxu/vista.vim.git

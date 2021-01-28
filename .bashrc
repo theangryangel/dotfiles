@@ -95,3 +95,6 @@ if [ $? -ge 2 ]; then
   ssh-agent -a "$SSH_AUTH_SOCK" >/dev/null
   ssh-add ~/.ssh/id_rsa
 fi
+
+# Created by `userpath` on 2020-12-07 14:43:27
+export PATH="$PATH:/home/karl/.local/bin"
