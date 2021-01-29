@@ -13,7 +13,36 @@ let g:coc_global_extensions = [ 'coc-pyright', 'coc-eslint', 'coc-snippets', 'co
 let g:airline#extensions#coc#enabled = 1
 
 " Add pathogen
-call pathogen#infect()
+" call pathogen#infect()
+
+" vim-plug
+call plug#begin('~/.vim/plugged')
+
+Plug 'editorconfig/editorconfig-vim'
+
+Plug 'preservim/nerdtree'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
+Plug 'sheerun/vim-polyglot'
+Plug 'honza/vim-snippets'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'liuchengxu/vista.vim'
+
+Plug 'tpope/vim-fugitive'
+
+" colour schemes & icons
+
+Plug 'arcticicestudio/nord-vim'
+Plug 'patstockwell/vim-monokai-tasty'
+Plug 'joshdick/onedark.vim'
+Plug 'sainnhe/sonokai'
+Plug 'ryanoasis/vim-devicons'
+
+call plug#end()
 
 " Basics
 set nocompatible " Use Vim settings. First, because it changes other options as a side effect.
@@ -62,8 +91,6 @@ syntax on
 set encoding=utf-8 nobomb
 set fileencoding=utf-8 nobomb
 
-"colorscheme molokai
-
 augroup nord-overrides
   " nord specific override to make comments legible
   autocmd!
@@ -88,21 +115,11 @@ map <silent> <PageDown> 1000<C-D>
 imap <silent> <PageUp> <C-O>1000<C-U>
 imap <silent> <PageDown> <C-O>1000<C-D>
 
-function Fxxd()
-  let c=getline(".")
-  if c =~ '^[0-9a-f]\{7}:'
-    :%!xxd -r
-  else
-    :%!xxd -g4
-  endif
-endfunction
-
 " NerdTree
 let g:NERDTreeHijackNetrw=1
+let g:NERDTreeChDirMode=2 " Make NERDTree change dir correctly, so tags file is correctly autoloaded.
+let NERDTreeShowHidden=1
 map <LocalLeader>nt :NERDTree<CR>
-
-" Convert to a hex output
-map <LocalLeader>hex :call Fxxd()<CR>
 
 " Make Y consistent with C and D. See :help Y.
 nnoremap Y y$
@@ -157,9 +174,7 @@ endif
 " Disable autofolding of markdown
 let g:vim_markdown_folding_disabled=1
 
-" Make NERDTree change dir correctly, so tags file is correctly autoloaded.
-let g:NERDTreeChDirMode=2
-let NERDTreeShowHidden=1
+
 
 " vim-go specifics
 let g:go_fmt_autosave = 0

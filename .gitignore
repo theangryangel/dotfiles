@@ -32,3 +32,6 @@ Thumbs.db
 .bashrc_local
 .ssh/
 .vim/swap
+
+# ignore vim-plug installed stuff
+.vim/plugged
