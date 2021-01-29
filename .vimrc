@@ -5,15 +5,6 @@
 "  * Ryan Kinderman - http://github.com/ryankinderman/dotfiles/blob/master/vimrc 
 "  * Greg Stallings - https://github.com/gregstallings/vimfiles/blob/master/vimrc
 
-" To disable a plugin, add it's bundle name to the following list
-" let g:pathogen_disabled = []
-
-let g:pathogen_disabled = []
-let g:coc_global_extensions = [ 'coc-pyright', 'coc-eslint', 'coc-snippets', 'coc-git', 'coc-emoji', 'coc-json', 'coc-css', 'coc-html', 'coc-yaml', 'coc-prettier' ]
-let g:airline#extensions#coc#enabled = 1
-
-" Add pathogen
-" call pathogen#infect()
 
 " vim-plug
 call plug#begin('~/.vim/plugged')
@@ -65,6 +56,7 @@ set autoindent    " Enable auto indentation
 set statusline=%<%F%h%m%r%=\[%B\]\ %l,%c%V\ %P " Default status line. Largely here as a fallback if airline is not available
 set laststatus=2
 set showcmd
+set cmdheight=2 " Give more space for displaying messages.
 set gcr=a:blinkon0
 set errorbells
 set visualbell
@@ -81,7 +73,13 @@ set smartcase  " ...unless they contain at least one uppercase character
 set splitbelow splitright
 
 set hidden
-set signcolumn=auto
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=auto
+endif
+
 set updatetime=300
 
 filetype plugin on
@@ -102,7 +100,7 @@ colorscheme nord
 hi Search guifg=#1B1D1E guibg=#FEFE56
 set cursorline " Highlight current line
 
-let maplocalleader=","
+let mapleader = ","
 
 " Platform specific
 if has("win32")
@@ -119,7 +117,7 @@ imap <silent> <PageDown> <C-O>1000<C-D>
 let g:NERDTreeHijackNetrw=1
 let g:NERDTreeChDirMode=2 " Make NERDTree change dir correctly, so tags file is correctly autoloaded.
 let NERDTreeShowHidden=1
-map <LocalLeader>nt :NERDTree<CR>
+map <Leader>nt :NERDTree<CR>
 
 " Make Y consistent with C and D. See :help Y.
 nnoremap Y y$
@@ -134,7 +132,7 @@ function! ToggleNumber()
   endif
 endfunc
 
-map <LocalLeader>tn :call ToggleNumber()<CR>
+map <Leader>tn :call ToggleNumber()<CR>
 
 " I can type :help on my own, thanks.
 noremap <F1> <Esc>
@@ -171,16 +169,52 @@ if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
   runtime! macros/matchit.vim
 endif
 
-" Disable autofolding of markdown
-let g:vim_markdown_folding_disabled=1
-
-
-
-" vim-go specifics
-let g:go_fmt_autosave = 0
-
-" Airline customisation
+" Airline
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 " Append the character code to airline_section_z
 let g:airline_section_z = airline#section#create(['windowswap', '%3p%%', 'linenr', ':%3v', ' | 0x%2B'])
+
+" coc.nvim
+let g:coc_global_extensions = [
+  \'coc-pyright',
+  \'coc-eslint',
+  \'coc-snippets',
+  \'coc-git',
+  \'coc-emoji',
+  \'coc-json',
+  \'coc-css',
+  \'coc-html',
+  \'coc-yaml',
+  \'coc-prettier'
+  \]
+let g:airline#extensions#coc#enabled = 1
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+" Symbol renaming.
+nmap <Leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
