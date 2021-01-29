@@ -186,7 +186,8 @@ let g:coc_global_extensions = [
   \'coc-css',
   \'coc-html',
   \'coc-yaml',
-  \'coc-prettier'
+  \'coc-prettier',
+  \'coc-xml'
   \]
 let g:airline#extensions#coc#enabled = 1
 
