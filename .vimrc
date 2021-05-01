@@ -190,7 +190,8 @@ let g:coc_global_extensions = [
   \'coc-prettier',
   \'coc-xml',
   \'coc-pairs',
-  \'coc-docker'
+  \'coc-docker',
+  \'coc-go'
   \]
 
 " GoTo code navigation.
