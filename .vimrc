@@ -5,7 +5,6 @@
 "  * Ryan Kinderman - http://github.com/ryankinderman/dotfiles/blob/master/vimrc 
 "  * Greg Stallings - https://github.com/gregstallings/vimfiles/blob/master/vimrc
 
-
 " vim-plug
 call plug#begin('~/.vim/plugged')
 
@@ -15,15 +14,9 @@ Plug 'preservim/nerdtree'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-
 Plug 'sheerun/vim-polyglot'
+Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'liuchengxu/vista.vim'
-
-Plug 'tpope/vim-fugitive'
 
 " colour schemes & icons
 
@@ -32,6 +25,18 @@ Plug 'patstockwell/vim-monokai-tasty'
 Plug 'joshdick/onedark.vim'
 Plug 'sainnhe/sonokai'
 Plug 'ryanoasis/vim-devicons'
+
+" Neovim 0.5+
+
+Plug 'neovim/nvim-lspconfig'
+Plug 'alexaandru/nvim-lspupdate'
+
+Plug 'nvim-lua/completion-nvim'
+Plug 'windwp/nvim-autopairs'
+
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 
 call plug#end()
 
@@ -174,51 +179,82 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 " Append the character code to airline_section_z
 let g:airline_section_z = airline#section#create(['windowswap', '%3p%%', 'linenr', ':%3v', ' | 0x%2B'])
-let g:airline#extensions#coc#enabled = 1
-
-" coc.nvim
-let g:coc_global_extensions = [
-  \'coc-pyright',
-  \'coc-eslint',
-  \'coc-snippets',
-  \'coc-git',
-  \'coc-emoji',
-  \'coc-json',
-  \'coc-css',
-  \'coc-html',
-  \'coc-yaml',
-  \'coc-prettier',
-  \'coc-xml',
-  \'coc-pairs',
-  \'coc-docker',
-  \'coc-go'
-  \]
-
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
-endfunction
-
-" Symbol renaming.
-nmap <Leader>rn <Plug>(coc-rename)
-
-" Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+let g:airline#extensions#coc#enabled = 0
 
 " Add `:Format` command to format current buffer.
 command! -nargs=0 Format :call CocAction('format')
+
+" -------------------- LSP ---------------------------------
+:lua << EOF
+
+  require('nvim-autopairs').setup()
+
+  local nvim_lsp = require('lspconfig')
+
+  local on_attach = function(client, bufnr)
+    require('completion').on_attach()
+
+    local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+    -- Mappings
+
+    local opts = { noremap=true, silent=true }
+    buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+    buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+    buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+    buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+    buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+    buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+    buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+    buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+    buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+    buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+    buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+    buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+    buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+    buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+    buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+    
+    -- Set some keybinds conditional on server capabilities
+    if client.resolved_capabilities.document_formatting then
+        buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+    elseif client.resolved_capabilities.document_range_formatting then
+        buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+    end
+
+  end
+
+  -- TODO: Find replacements for coc-prettier, coc-xml, coc-eslint
+  local servers = {'pyright', 'gopls', 'dockerls', 'jsonls', 'html', 'yamlls', 'diagnosticls'}
+  for _, lsp in ipairs(servers) do
+    nvim_lsp[lsp].setup {
+      on_attach = on_attach,
+    }
+  end
+EOF
+
+set completeopt=menuone,noinsert,noselect
+let g:completion_confirm_key = "\<CR>"
+
+let g:completion_chain_complete_list = {
+	    \ 'default' : {
+	    \   'default': [
+	    \       {'complete_items': ['lsp', 'snippet']},
+	    \       {'complete_items': ['path'], 'triggered_only': ['/']},
+	    \       {'mode': '<c-p>'},
+	    \       {'mode': '<c-n>'}],
+	    \   'comment': [],
+      \   'string': [{ 'complete_items': ['path']}]
+	    \   },
+	    \}
+
+" Completion
+let g:completion_enable_snippet = 'UltiSnips'
+let g:UltiSnipsExpandTrigger="<C-tab>"
+"let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
+"inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+"inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" -------------------- LSP ---------------------------------

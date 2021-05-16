@@ -98,3 +98,4 @@ fi
 
 # Created by `userpath` on 2020-12-07 14:43:27
 export PATH="$PATH:/home/karl/.local/bin"
+source "$HOME/.cargo/env"
