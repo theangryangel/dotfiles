@@ -5,28 +5,26 @@
 "  * Ryan Kinderman - http://github.com/ryankinderman/dotfiles/blob/master/vimrc 
 "  * Greg Stallings - https://github.com/gregstallings/vimfiles/blob/master/vimrc
 
-
 " vim-plug
 call plug#begin('~/.vim/plugged')
 
 Plug 'editorconfig/editorconfig-vim'
 
 Plug 'preservim/nerdtree'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 
 Plug 'sheerun/vim-polyglot'
 Plug 'honza/vim-snippets'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " colour schemes & icons
-Plug 'arcticicestudio/nord-vim'
 Plug 'patstockwell/vim-monokai-tasty'
 Plug 'joshdick/onedark.vim'
 Plug 'sainnhe/sonokai'
 Plug 'ryanoasis/vim-devicons'
 
 if has('nvim-0.5')
+  Plug 'shaunsingh/nord.nvim'
+
   Plug 'kyazdani42/nvim-web-devicons'
   Plug 'romgrk/barbar.nvim'
 
@@ -36,6 +34,15 @@ if has('nvim-0.5')
   Plug 'nvim-lua/popup.nvim'
   Plug 'nvim-lua/plenary.nvim'
   Plug 'nvim-telescope/telescope.nvim'
+
+  Plug 'hoob3rt/lualine.nvim'
+
+  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+else
+  Plug 'arcticicestudio/nord-vim'
+
+  Plug 'vim-airline/vim-airline'
+  Plug 'vim-airline/vim-airline-themes'
 endif
 
 call plug#end()
@@ -174,15 +181,6 @@ if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
   runtime! macros/matchit.vim
 endif
 
-" Airline
-if !has('nvim-0.5')
-  let g:airline#extensions#tabline#enabled = 1
-endif
-let g:airline_powerline_fonts = 1
-" Append the character code to airline_section_z
-let g:airline_section_z = airline#section#create(['windowswap', '%3p%%', 'linenr', ':%3v', ' | 0x%2B'])
-let g:airline#extensions#coc#enabled = 1
-
 " coc.nvim
 let g:coc_global_extensions = [
   \'coc-pyright',
@@ -227,3 +225,30 @@ nmap <leader>f  <Plug>(coc-format-selected)
 
 " Add `:Format` command to format current buffer.
 command! -nargs=0 Format :call CocAction('format')
+
+if has('nvim-0.5')
+  lua << EOF
+  require('lualine').setup {
+    options = {
+      -- ... your lualine config
+      theme = 'nord'
+      -- ... your lualine config
+    }
+  }
+
+  require'nvim-treesitter.configs'.setup {
+    ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+    ignore_install = {}, -- List of parsers to ignore installing
+    highlight = {
+      enable = true,     -- false will disable the whole extension
+      disable = {},      -- list of language that will be disabled
+    },
+  }
+EOF
+else
+  " Airline
+  let g:airline_powerline_fonts = 1
+  " Append the character code to airline_section_z
+  let g:airline_section_z = airline#section#create(['windowswap', '%3p%%', 'linenr', ':%3v', ' | 0x%2B'])
+  let g:airline#extensions#coc#enabled = 1
+endif
