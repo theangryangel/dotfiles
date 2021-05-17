@@ -33,6 +33,12 @@ Plug 'joshdick/onedark.vim'
 Plug 'sainnhe/sonokai'
 Plug 'ryanoasis/vim-devicons'
 
+if has('nvim-0.5')
+  Plug 'kyazdani42/nvim-web-devicons'
+  Plug 'romgrk/barbar.nvim'
+  Plug 'folke/tokyonight.nvim'
+endif
+
 call plug#end()
 
 " Basics
@@ -170,7 +176,9 @@ if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
 endif
 
 " Airline
-let g:airline#extensions#tabline#enabled = 1
+if !has('nvim-0.5')
+  let g:airline#extensions#tabline#enabled = 1
+endif
 let g:airline_powerline_fonts = 1
 " Append the character code to airline_section_z
 let g:airline_section_z = airline#section#create(['windowswap', '%3p%%', 'linenr', ':%3v', ' | 0x%2B'])
