@@ -15,18 +15,11 @@ Plug 'preservim/nerdtree'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-
 Plug 'sheerun/vim-polyglot'
 Plug 'honza/vim-snippets'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'liuchengxu/vista.vim'
-
-Plug 'tpope/vim-fugitive'
 
 " colour schemes & icons
-
 Plug 'arcticicestudio/nord-vim'
 Plug 'patstockwell/vim-monokai-tasty'
 Plug 'joshdick/onedark.vim'
@@ -36,7 +29,13 @@ Plug 'ryanoasis/vim-devicons'
 if has('nvim-0.5')
   Plug 'kyazdani42/nvim-web-devicons'
   Plug 'romgrk/barbar.nvim'
-  Plug 'folke/tokyonight.nvim'
+
+  Plug 'windwp/nvim-autopairs'
+
+  " Telescope
+  Plug 'nvim-lua/popup.nvim'
+  Plug 'nvim-lua/plenary.nvim'
+  Plug 'nvim-telescope/telescope.nvim'
 endif
 
 call plug#end()
@@ -189,7 +188,6 @@ let g:coc_global_extensions = [
   \'coc-pyright',
   \'coc-eslint',
   \'coc-snippets',
-  \'coc-git',
   \'coc-emoji',
   \'coc-json',
   \'coc-css',
@@ -197,7 +195,6 @@ let g:coc_global_extensions = [
   \'coc-yaml',
   \'coc-prettier',
   \'coc-xml',
-  \'coc-pairs',
   \'coc-docker',
   \'coc-go'
   \]
