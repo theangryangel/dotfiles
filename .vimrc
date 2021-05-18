@@ -21,10 +21,11 @@ Plug 'patstockwell/vim-monokai-tasty'
 Plug 'joshdick/onedark.vim'
 Plug 'sainnhe/sonokai'
 Plug 'ryanoasis/vim-devicons'
-Plug 'arcticicestudio/nord-vim'
 
 if has('nvim-0.5')
   "Plug 'shaunsingh/nord.nvim'
+  
+  Plug 'ChristianChiarulli/nvcode-color-schemes.vim'
 
   Plug 'kyazdani42/nvim-web-devicons'
   Plug 'romgrk/barbar.nvim'
@@ -38,8 +39,9 @@ if has('nvim-0.5')
 
   Plug 'hoob3rt/lualine.nvim'
 
-  "Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 else
+  Plug 'arcticicestudio/nord-vim'
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
 endif
@@ -235,7 +237,6 @@ if has('nvim-0.5')
     }
   }
 
-  --[[
   require'nvim-treesitter.configs'.setup {
     ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
     ignore_install = {}, -- List of parsers to ignore installing
@@ -244,7 +245,6 @@ if has('nvim-0.5')
       disable = {},      -- list of language that will be disabled
     },
   }
-  ]]--
 EOF
 else
   " Airline
