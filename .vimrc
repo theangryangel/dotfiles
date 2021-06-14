@@ -195,7 +195,9 @@ let g:coc_global_extensions = [
   \'coc-prettier',
   \'coc-xml',
   \'coc-docker',
-  \'coc-go'
+  \'coc-go',
+  \'coc-tsserver',
+  \ 'https://github.com/rodrigore/coc-tailwind-intellisense'
   \]
 
 " GoTo code navigation.
