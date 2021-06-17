@@ -40,6 +40,8 @@ if has('nvim-0.5')
   Plug 'hoob3rt/lualine.nvim'
 
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
+  Plug 'folke/which-key.nvim'
 else
   Plug 'arcticicestudio/nord-vim'
   Plug 'vim-airline/vim-airline'
@@ -231,6 +233,8 @@ command! -nargs=0 Format :call CocAction('format')
 
 if has('nvim-0.5')
   lua << EOF
+  require("which-key").setup {}
+
   require('lualine').setup {
     options = {
       -- ... your lualine config
