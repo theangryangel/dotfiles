@@ -21,6 +21,7 @@ Plug 'patstockwell/vim-monokai-tasty'
 Plug 'joshdick/onedark.vim'
 Plug 'sainnhe/sonokai'
 Plug 'ryanoasis/vim-devicons'
+Plug 'arcticicestudio/nord-vim'
 
 if has('nvim-0.5')
   "Plug 'shaunsingh/nord.nvim'
@@ -42,8 +43,8 @@ if has('nvim-0.5')
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
   Plug 'folke/which-key.nvim'
+  Plug 'kyazdani42/nvim-tree.lua'
 else
-  Plug 'arcticicestudio/nord-vim'
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
 endif
@@ -128,11 +129,6 @@ map <silent> <PageDown> 1000<C-D>
 imap <silent> <PageUp> <C-O>1000<C-U>
 imap <silent> <PageDown> <C-O>1000<C-D>
 
-" NerdTree
-let g:NERDTreeHijackNetrw=1
-let g:NERDTreeChDirMode=2 " Make NERDTree change dir correctly, so tags file is correctly autoloaded.
-let NERDTreeShowHidden=1
-map <Leader>nt :NERDTree<CR>
 
 " Make Y consistent with C and D. See :help Y.
 nnoremap Y y$
@@ -232,6 +228,8 @@ nmap <leader>f  <Plug>(coc-format-selected)
 command! -nargs=0 Format :call CocAction('format')
 
 if has('nvim-0.5')
+  map <Leader>nt :NvimTreeToggle<CR>
+
   lua << EOF
   require("which-key").setup {}
 
@@ -253,6 +251,12 @@ if has('nvim-0.5')
   }
 EOF
 else
+  " NerdTree
+  let g:NERDTreeHijackNetrw=1
+  let g:NERDTreeChDirMode=2 " Make NERDTree change dir correctly, so tags file is correctly autoloaded.
+  let NERDTreeShowHidden=1
+  map <Leader>nt :NERDTree<CR>
+
   " Airline
   let g:airline_powerline_fonts = 1
   " Append the character code to airline_section_z
