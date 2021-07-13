@@ -25,6 +25,7 @@ Plug 'arcticicestudio/nord-vim'
 
 if has('nvim-0.5')
   "Plug 'shaunsingh/nord.nvim'
+  Plug 'projekt0n/github-nvim-theme'
   
   Plug 'ChristianChiarulli/nvcode-color-schemes.vim'
 
@@ -111,7 +112,7 @@ augroup nord-overrides
   autocmd ColorScheme * highlight Comment ctermfg=14
 augroup end
 
-colorscheme nord
+"colorscheme nord
 
 hi Search guifg=#1B1D1E guibg=#FEFE56
 set cursorline " Highlight current line
@@ -231,12 +232,17 @@ if has('nvim-0.5')
   map <Leader>nt :NvimTreeToggle<CR>
 
   lua << EOF
+
+  require("github-theme").setup({
+    themeStyle = "dimmed",
+  })
+
   require("which-key").setup {}
 
   require('lualine').setup {
     options = {
       -- ... your lualine config
-      theme = 'nord'
+      theme = 'github'
       -- ... your lualine config
     }
   }

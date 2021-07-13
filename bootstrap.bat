@@ -24,6 +24,7 @@ mkdir -p ~/.config/nvim
 
 ln -s $dir/.config/nvim/init.vim ~/.config/nvim/init.vim
 ln -s $dir/.config/nvim/ginit.vim ~/.config/nvim/ginit.vim
+ln -s $dir/.config/nvim/coc-settings.json ~/.config/nvim/coc-settings.json
 exit
 
 :batch_file
