@@ -7,49 +7,40 @@
 
 " vim-plug
 call plug#begin('~/.vim/plugged')
-
 Plug 'editorconfig/editorconfig-vim'
 
-Plug 'preservim/nerdtree'
-
+" vim native snippets
 Plug 'sheerun/vim-polyglot'
 Plug 'honza/vim-snippets'
+
+" vscode snippets
+Plug 'rafamadriz/friendly-snippets'
+
+" lsp
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " colour schemes & icons
 Plug 'patstockwell/vim-monokai-tasty'
-Plug 'joshdick/onedark.vim'
 Plug 'sainnhe/sonokai'
-Plug 'ryanoasis/vim-devicons'
 Plug 'arcticicestudio/nord-vim'
+Plug 'projekt0n/github-nvim-theme'
+Plug 'kyazdani42/nvim-web-devicons'
 
-if has('nvim-0.5')
-  "Plug 'shaunsingh/nord.nvim'
-  Plug 'projekt0n/github-nvim-theme'
-  
-  Plug 'ChristianChiarulli/nvcode-color-schemes.vim'
+Plug 'romgrk/barbar.nvim'
 
-  Plug 'kyazdani42/nvim-web-devicons'
-  Plug 'romgrk/barbar.nvim'
+Plug 'windwp/nvim-autopairs'
 
-  Plug 'windwp/nvim-autopairs'
+" Telescope
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 
-  " Telescope
-  Plug 'nvim-lua/popup.nvim'
-  Plug 'nvim-lua/plenary.nvim'
-  Plug 'nvim-telescope/telescope.nvim'
+Plug 'hoob3rt/lualine.nvim'
 
-  Plug 'hoob3rt/lualine.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'branch': '0.5-compat', 'do': ':TSUpdate'}
 
-  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-
-  Plug 'folke/which-key.nvim'
-  Plug 'kyazdani42/nvim-tree.lua'
-else
-  Plug 'vim-airline/vim-airline'
-  Plug 'vim-airline/vim-airline-themes'
-endif
-
+Plug 'folke/which-key.nvim'
+Plug 'kyazdani42/nvim-tree.lua'
 call plug#end()
 
 " Basics
@@ -90,12 +81,7 @@ set smartcase  " ...unless they contain at least one uppercase character
 set splitbelow splitright
 
 set hidden
-if has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one
-  set signcolumn=number
-else
-  set signcolumn=auto
-endif
+set signcolumn=number
 
 set updatetime=300
 
@@ -129,7 +115,6 @@ map <silent> <PageUp> 1000<C-U>
 map <silent> <PageDown> 1000<C-D>
 imap <silent> <PageUp> <C-O>1000<C-U>
 imap <silent> <PageDown> <C-O>1000<C-D>
-
 
 " Make Y consistent with C and D. See :help Y.
 nnoremap Y y$
@@ -172,8 +157,6 @@ augroup configgroup
 
   " Make sure all markdown files have the correct filetype
   autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn,txt} setf markdown
-
-  autocmd BufEnter Makefile setlocal noexpandtab
 augroup END
 
 " Load matchit.vim, but only if the user hasn't installed a newer version.
@@ -228,44 +211,29 @@ nmap <leader>f  <Plug>(coc-format-selected)
 " Add `:Format` command to format current buffer.
 command! -nargs=0 Format :call CocAction('format')
 
-if has('nvim-0.5')
-  map <Leader>nt :NvimTreeToggle<CR>
+map <Leader>nt :NvimTreeToggle<CR>
 
-  lua << EOF
+lua << EOF
+require("github-theme").setup({
+  themeStyle = "dimmed",
+})
 
-  require("github-theme").setup({
-    themeStyle = "dimmed",
-  })
+require("which-key").setup {}
 
-  require("which-key").setup {}
-
-  require('lualine').setup {
-    options = {
-      -- ... your lualine config
-      theme = 'github'
-      -- ... your lualine config
-    }
+require('lualine').setup {
+  options = {
+    -- ... your lualine config
+    theme = 'github'
+    -- ... your lualine config
   }
+}
 
-  require'nvim-treesitter.configs'.setup {
-    ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-    ignore_install = {}, -- List of parsers to ignore installing
-    highlight = {
-      enable = true,     -- false will disable the whole extension
-      disable = {},      -- list of language that will be disabled
-    },
-  }
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  ignore_install = {}, -- List of parsers to ignore installing
+  highlight = {
+    enable = true,     -- false will disable the whole extension
+    disable = {},      -- list of language that will be disabled
+  },
+}
 EOF
-else
-  " NerdTree
-  let g:NERDTreeHijackNetrw=1
-  let g:NERDTreeChDirMode=2 " Make NERDTree change dir correctly, so tags file is correctly autoloaded.
-  let NERDTreeShowHidden=1
-  map <Leader>nt :NERDTree<CR>
-
-  " Airline
-  let g:airline_powerline_fonts = 1
-  " Append the character code to airline_section_z
-  let g:airline_section_z = airline#section#create(['windowswap', '%3p%%', 'linenr', ':%3v', ' | 0x%2B'])
-  let g:airline#extensions#coc#enabled = 1
-endif
