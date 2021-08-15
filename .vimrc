@@ -212,6 +212,7 @@ nmap <leader>f  <Plug>(coc-format-selected)
 command! -nargs=0 Format :call CocAction('format')
 
 map <Leader>nt :NvimTreeToggle<CR>
+let g:nvim_tree_auto_resize = 0
 
 lua << EOF
 require("github-theme").setup({
