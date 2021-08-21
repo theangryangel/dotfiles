@@ -1,0 +1,334 @@
+" TODO: Split this into .vimrc and .config/nvim/init.vim versions
+
+" Install vim-plug if not found
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+
+" Run PlugInstall if there are missing plugins
+autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \| PlugInstall --sync | source $MYVIMRC
+\| endif
+
+" vim-plug
+call plug#begin('~/.vim/plugged')
+Plug 'editorconfig/editorconfig-vim'
+
+" language pack
+Plug 'sheerun/vim-polyglot'
+
+" vim snippets
+Plug 'honza/vim-snippets'
+Plug 'SirVer/ultisnips'
+
+" vscode snippets
+Plug 'hrsh7th/vim-vsnip'
+Plug 'rafamadriz/friendly-snippets'
+
+Plug 'windwp/nvim-autopairs'
+
+" lsp
+Plug 'neovim/nvim-lspconfig'
+Plug 'kabouzeid/nvim-lspinstall'
+Plug 'jose-elias-alvarez/null-ls.nvim'
+Plug 'ray-x/lsp_signature.nvim'
+Plug 'onsails/lspkind-nvim'
+Plug 'hrsh7th/nvim-compe'
+
+Plug 'nvim-treesitter/nvim-treesitter', {'branch': '0.5-compat', 'do': ':TSUpdate'}
+
+" colour schemes & icons
+Plug 'patstockwell/vim-monokai-tasty'
+Plug 'sainnhe/sonokai'
+Plug 'arcticicestudio/nord-vim'
+Plug 'projekt0n/github-nvim-theme'
+Plug 'kyazdani42/nvim-web-devicons'
+
+" Telescope
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+
+" UI
+Plug 'hoob3rt/lualine.nvim'
+Plug 'romgrk/barbar.nvim'
+
+Plug 'folke/which-key.nvim'
+Plug 'kyazdani42/nvim-tree.lua'
+call plug#end()
+
+" TODO: Figure out whats really necessary in a modern version of neovim or
+" vim.
+
+" Basics
+set nocompatible " Use Vim settings. First, because it changes other options as a side effect.
+set shortmess=atIc " Don't show the Vim intro message
+
+set nobackup
+set backupcopy=yes " Fix file watchers
+set number
+set nowrap
+
+set termguicolors
+
+set title         " Set terminal window
+set expandtab     " Tab in insert mode will produce spaces
+set tabstop=2     " Width of a tab
+set shiftwidth=2  " Width of reindent operations and auto indentation
+set softtabstop=2 " Set spaces for tab in insert mode
+set autoindent    " Enable auto indentation
+
+set statusline=%<%F%h%m%r%=\[%B\]\ %l,%c%V\ %P " Default status line. Largely here as a fallback
+set laststatus=2
+set showcmd
+set cmdheight=2 " Give more space for displaying messages.
+set gcr=a:blinkon0
+set errorbells
+set visualbell
+set nowarn
+set backspace=indent,eol,start " Backspace over everything in insert mode
+set autoindent
+
+set hlsearch   " Highlight searches
+set incsearch  " Highlight dynamically as pattern is typed
+set ignorecase " Make searches case-insensitive...
+set smartcase  " ...unless they contain at least one uppercase character
+
+" Split windows below and right instead of above and left
+set splitbelow splitright
+
+set hidden
+set signcolumn=number
+
+set updatetime=300
+
+filetype plugin on
+syntax on
+
+" Use UTF-8 without BOM
+set encoding=utf-8 nobomb
+set fileencoding=utf-8 nobomb
+
+set cursorline " Highlight current line
+
+let mapleader = ","
+
+" Platform specific
+if has("win32")
+  set directory=.,$TEMP
+endif
+
+" Better Page Up and Down emulators
+map <silent> <PageUp> 1000<C-U>
+map <silent> <PageDown> 1000<C-D>
+imap <silent> <PageUp> <C-O>1000<C-U>
+imap <silent> <PageDown> <C-O>1000<C-D>
+
+" Make Y consistent with C and D. See :help Y.
+nnoremap Y y$
+
+" Toggle between number and relativenumber
+function! ToggleNumber()
+  if(&relativenumber == 1)
+    set norelativenumber
+    set number
+  else
+    set relativenumber
+  endif
+endfunc
+
+map <Leader>tn :call ToggleNumber()<CR>
+
+" I can type :help on my own, thanks.
+noremap <F1> <Esc>
+
+" Load filetype-specific indent files
+filetype plugin indent on
+
+" Autocmd group
+augroup configgroup
+  autocmd!
+
+  " When editing a file, always jump to the last known cursor position.
+  " Don't do it when the position is invalid or when inside an event handler
+  " (happens when dropping a file on gvim).
+  autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif 
+
+  " Treat JSON files like JavaScript
+  autocmd BufNewFile,BufRead *.json setf javascript
+
+  " Make sure all markdown files have the correct filetype
+  autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn,txt} setf markdown
+augroup END
+
+" Load matchit.vim, but only if the user hasn't installed a newer version.
+if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
+  runtime! macros/matchit.vim
+endif
+
+" compe
+set completeopt=menuone,noselect
+inoremap <silent><expr> <CR> compe#confirm('<CR>')
+
+" nvimtree
+map <Leader>nt :NvimTreeToggle<CR>
+let g:nvim_tree_auto_resize = 0
+
+lua << EOF
+require("github-theme").setup({
+  themeStyle = "dimmed",
+})
+
+require("which-key").setup {}
+
+require('lualine').setup {
+  options = {
+    theme = 'github'
+  }
+}
+
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  ignore_install = {}, -- List of parsers to ignore installing
+  highlight = {
+    enable = true,     -- false will disable the whole extension
+    disable = {},      -- list of language that will be disabled
+  },
+}
+
+require('nvim-autopairs').setup{}
+
+-- lspconfig
+local nvim_lsp = require('lspconfig')
+
+local on_attach = function(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- Mappings
+
+  local opts = { noremap=true, silent=true }
+  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  
+  -- Set some keybinds conditional on server capabilities
+  if client.resolved_capabilities.document_formatting then
+      buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+  elseif client.resolved_capabilities.document_range_formatting then
+      buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+  end
+end
+
+require'lspinstall'.setup()
+-- TODO: Auto install python, go, dockerfile, json, html, yaml
+-- currently crashes neovim
+
+local servers = require'lspinstall'.installed_servers()
+for _, server in pairs(servers) do
+  require'lspconfig'[server].setup{
+    on_attach = on_attach,
+    flags = {
+      debounce_text_changes = 150,
+    }
+  }
+end
+
+local null_ls = require('null-ls')
+null_ls.config({
+    sources = {
+      null_ls.builtins.diagnostics.pylint,
+      null_ls.builtins.diagnostics.flake8,
+      null_ls.builtins.formatting.isort,
+
+      null_ls.builtins.diagnostics.eslint,
+      
+      null_ls.builtins.formatting.gofmt,
+    }
+})
+
+require("lspconfig")["null-ls"].setup({
+    on_attach = on_attach
+})
+
+require 'compe'.setup {
+ enabled = true,
+ autocomplete = true,
+ debug = false,
+ min_length = 1,
+ preselect = "enable",
+ throttle_time = 80,
+ source_timeout = 200,
+ incomplete_delay = 400,
+ max_abbr_width = 100,
+ max_kind_width = 100,
+ max_menu_width = 100,
+ documentation = true,
+ source = {
+    path = true;
+    buffer = true;
+    nvim_lsp = true;
+    nvim_lua = true;
+    vsnip = true;
+    ultisnips = true;
+    emoji = true;
+ },
+}
+
+require "lsp_signature".setup({
+    bind = true, -- This is mandatory, otherwise border config won't get registered.
+
+    -- The following makes lsp_signature look like the default floating windows.
+    hint_enable = false,
+    handler_opts = {
+      border = "none"
+    }
+})
+
+require('lspkind').init({
+    with_text = true,
+
+    symbol_map = {
+      Text = "",
+      Method = "",
+      Function = "",
+      Constructor = "",
+      Field = "ﰠ",
+      Variable = "",
+      Class = "ﴯ",
+      Interface = "",
+      Module = "",
+      Property = "ﰠ",
+      Unit = "塞",
+      Value = "",
+      Enum = "",
+      Keyword = "",
+      Snippet = "",
+      Color = "",
+      File = "",
+      Reference = "",
+      Folder = "",
+      EnumMember = "",
+      Constant = "",
+      Struct = "פּ",
+      Event = "",
+      Operator = "",
+      TypeParameter = ""
+    },
+})
+EOF
