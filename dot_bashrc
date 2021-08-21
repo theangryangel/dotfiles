@@ -97,4 +97,4 @@ if [ $? -ge 2 ]; then
 fi
 
 # Created by `userpath` on 2020-12-07 14:43:27
-export PATH="$PATH:/home/karl/.local/bin"
+export PATH="$PATH:/home/karl/.local/bin:$NPM_PACKAGES/bin"

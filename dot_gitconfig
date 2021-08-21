@@ -1,7 +1,7 @@
 [user]
 	name = Karl Southern
 	email = karl@theangryangel.co.uk
-	signingkey = 6566DE76EA985E03
+	#signingkey = 6566DE76EA985E03
 [core]
 	excludesfile = ~/.gitignore
 	editor = /usr/bin/nvim
@@ -27,6 +27,6 @@
 [pull]
 	rebase = false
 [commit]
-	gpgSign = true
+	#gpgSign = true
 [url "ssh://git@github.com/"]
   insteadOf = https://github.com/
