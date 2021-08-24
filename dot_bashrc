@@ -1,28 +1,32 @@
 # if not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
+pathappend() {
+  for ARG in "$@"
+  do
+    if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
+        PATH="${PATH:+"$PATH:"}$ARG"
+    fi
+  done
+}
+
 if [ -f ~/.bashrc_local ]; then
 	source ~/.bashrc_local
 fi
 
-# additional local path (OS X)
-if [ -d ~/bin ]; then
-	PATH=$PATH:~/bin
-fi
-
 # additional local path (Linux)
 if [ -d ~/.local/bin ]; then
-	PATH=$PATH:~/.local/bin
+  pathappend ~/.local/bin
 fi
 
 # ruby gems path
 if which ruby >/dev/null && which gem >/dev/null; then
-    PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
+  pathappend "$(ruby -e 'puts Gem.user_dir')/bin"
 fi
 
 # golang
 if [ -n "$GOPATH" ]; then
-    PATH=$PATH:$GOPATH/bin
+  pathappend $GOPATH
 fi
 
 export PATH
@@ -51,20 +55,6 @@ if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
 fi
 
 PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-    xterm-color) color_prompt=yes;;
-esac
-
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
 
 # aliases
 if [ -f ~/.bash_aliases ]; then
@@ -95,6 +85,3 @@ if [ $? -ge 2 ]; then
   ssh-agent -a "$SSH_AUTH_SOCK" >/dev/null
   ssh-add ~/.ssh/id_rsa
 fi
-
-# Created by `userpath` on 2020-12-07 14:43:27
-export PATH="$PATH:/home/karl/.local/bin:$NPM_PACKAGES/bin"
