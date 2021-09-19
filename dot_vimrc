@@ -176,9 +176,9 @@ map <Leader>nt :NvimTreeToggle<CR>
 let g:nvim_tree_auto_resize = 0
 
 lua << EOF
-require("github-theme").setup({
-  themeStyle = "dimmed",
-})
+require("github-theme").setup{
+  theme_style = "dimmed",
+}
 
 require("which-key").setup {}
 
