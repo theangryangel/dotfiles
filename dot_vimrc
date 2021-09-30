@@ -51,7 +51,8 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 
 " UI
-Plug 'hoob3rt/lualine.nvim'
+"Plug 'hoob3rt/lualine.nvim'
+Plug 'shadmansaleh/lualine.nvim'
 Plug 'romgrk/barbar.nvim'
 
 Plug 'folke/which-key.nvim'
@@ -173,20 +174,25 @@ inoremap <silent><expr> <CR> compe#confirm('<CR>')
 
 " nvimtree
 map <Leader>nt :NvimTreeToggle<CR>
-let g:nvim_tree_auto_resize = 0
 
 lua << EOF
-require("github-theme").setup{
-  theme_style = "dimmed",
+require'nvim-tree'.setup {
+  view = {
+    auto_resize = False,
+  }
 }
-
-require("which-key").setup {}
 
 require('lualine').setup {
   options = {
     theme = 'github'
   }
 }
+
+require("github-theme").setup({
+  theme_style = "dimmed",
+})
+
+require("which-key").setup {}
 
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
