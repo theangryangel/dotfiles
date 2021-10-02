@@ -174,7 +174,7 @@ if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
 endif
 
 " nvim-cmp
-set completeopt=menu,menuone,noselect
+set completeopt=menuone,noselect
 
 " nvimtree
 map <Leader>nt :NvimTreeToggle<CR>
