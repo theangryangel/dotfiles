@@ -194,6 +194,7 @@ require('lualine').setup {
 
 require("github-theme").setup({
   theme_style = "dimmed",
+  hide_inactive_statusline = False,
 })
 
 require("which-key").setup {}
