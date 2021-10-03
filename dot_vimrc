@@ -80,6 +80,7 @@ set termguicolors
 
 set title         " Set terminal window
 set expandtab     " Tab in insert mode will produce spaces
+set tw=80         " Text Width
 set tabstop=2     " Width of a tab
 set shiftwidth=2  " Width of reindent operations and auto indentation
 set softtabstop=2 " Set spaces for tab in insert mode
