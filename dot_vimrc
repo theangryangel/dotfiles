@@ -26,6 +26,7 @@ Plug 'SirVer/ultisnips'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'rafamadriz/friendly-snippets'
 
+Plug 'terrortylor/nvim-comment'
 Plug 'windwp/nvim-autopairs'
 
 " lsp
@@ -48,6 +49,7 @@ Plug 'patstockwell/vim-monokai-tasty'
 Plug 'sainnhe/sonokai'
 Plug 'arcticicestudio/nord-vim'
 Plug 'projekt0n/github-nvim-theme'
+Plug 'ChristianChiarulli/nvcode-color-schemes.vim'
 Plug 'kyazdani42/nvim-web-devicons'
 
 " Telescope
@@ -62,6 +64,9 @@ Plug 'romgrk/barbar.nvim'
 
 Plug 'folke/which-key.nvim'
 Plug 'kyazdani42/nvim-tree.lua'
+
+" Temporary workaround for netrw bug
+Plug 'felipec/vim-sanegx'
 call plug#end()
 
 " TODO: Figure out whats really necessary in a modern version of neovim or
@@ -86,10 +91,10 @@ set shiftwidth=2  " Width of reindent operations and auto indentation
 set softtabstop=2 " Set spaces for tab in insert mode
 set autoindent    " Enable auto indentation
 
-set statusline=%<%F%h%m%r%=\[%B\]\ %l,%c%V\ %P " Default status line. Largely here as a fallback
-set laststatus=2
+"set statusline=%<%F%h%m%r%=\[%B\]\ %l,%c%V\ %P " Default status line. Largely here as a fallback
+"set laststatus=2
 set showcmd
-set cmdheight=2 " Give more space for displaying messages.
+set cmdheight=1 " Give more space for displaying messages.
 set gcr=a:blinkon0
 set errorbells
 set visualbell
@@ -181,6 +186,8 @@ set completeopt=menu,menuone,noselect
 map <Leader>nt :NvimTreeToggle<CR>
 
 lua << EOF
+require('nvim_comment').setup()
+
 require'nvim-tree'.setup {
   view = {
     auto_resize = False,
@@ -189,14 +196,10 @@ require'nvim-tree'.setup {
 
 require('lualine').setup {
   options = {
-    theme = 'github'
-  }
+    theme = 'onedark',
+    extensions = {'nvim-tree'},
+  },
 }
-
-require("github-theme").setup({
-  theme_style = "dimmed",
-  hide_inactive_statusline = False,
-})
 
 require("which-key").setup {}
 
@@ -246,24 +249,6 @@ local on_attach = function(client, bufnr)
       buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
   end
 end
-
--- Temporarily disable null-ls
---local null_ls = require('null-ls')
---null_ls.config({
---    sources = {
---      null_ls.builtins.diagnostics.pylint,
---      null_ls.builtins.diagnostics.flake8,
---      null_ls.builtins.formatting.isort,
---
---      null_ls.builtins.diagnostics.eslint,
---      
---      null_ls.builtins.formatting.gofmt,
---    }
---})
-
---require("lspconfig")["null-ls"].setup({
---    on_attach = on_attach
---})
 
 -- Setup nvim-cmp.
 local cmp = require'cmp'
@@ -350,3 +335,5 @@ require('lspkind').init({
     },
 })
 EOF
+
+colorscheme onedark
