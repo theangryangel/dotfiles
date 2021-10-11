@@ -45,11 +45,7 @@ Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'nvim-treesitter/nvim-treesitter', {'branch': '0.5-compat', 'do': ':TSUpdate'}
 
 " colour schemes & icons
-Plug 'patstockwell/vim-monokai-tasty'
-Plug 'sainnhe/sonokai'
-Plug 'arcticicestudio/nord-vim'
 Plug 'projekt0n/github-nvim-theme'
-Plug 'ChristianChiarulli/nvcode-color-schemes.vim'
 Plug 'kyazdani42/nvim-web-devicons'
 
 " Telescope
@@ -58,7 +54,6 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 
 " UI
-"Plug 'hoob3rt/lualine.nvim'
 Plug 'shadmansaleh/lualine.nvim'
 Plug 'romgrk/barbar.nvim'
 
@@ -196,7 +191,7 @@ require'nvim-tree'.setup {
 
 require('lualine').setup {
   options = {
-    theme = 'onedark',
+    theme = 'github',
     extensions = {'nvim-tree'},
   },
 }
@@ -334,6 +329,10 @@ require('lspkind').init({
       TypeParameter = ""
     },
 })
-EOF
 
-colorscheme onedark
+require("github-theme").setup({
+  theme_style = "dimmed",
+  hide_inactive_statusline = false,
+  -- other config
+})
+EOF
