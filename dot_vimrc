@@ -16,7 +16,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'editorconfig/editorconfig-vim'
 
 " language pack
-Plug 'sheerun/vim-polyglot'
+"Plug 'sheerun/vim-polyglot'
 
 " vim snippets
 Plug 'honza/vim-snippets'
@@ -54,7 +54,7 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 
 " UI
-Plug 'shadmansaleh/lualine.nvim'
+Plug 'nvim-lualine/lualine.nvim'
 Plug 'romgrk/barbar.nvim'
 
 Plug 'folke/which-key.nvim'
