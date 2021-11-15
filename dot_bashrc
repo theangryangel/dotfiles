@@ -20,7 +20,7 @@ if [ -d ~/.local/bin ]; then
 fi
 
 # ruby gems path
-if which ruby >/dev/null && which gem >/dev/null; then
+if which ruby >/dev/null 2>&1 && which gem >/dev/null 2>&1; then
   pathappend "$(ruby -e 'puts Gem.user_dir')/bin"
 fi
 
