@@ -31,7 +31,7 @@ Plug 'windwp/nvim-autopairs'
 
 " lsp
 Plug 'neovim/nvim-lspconfig'
-Plug 'kabouzeid/nvim-lspinstall'
+Plug 'williamboman/nvim-lsp-installer'
 Plug 'jose-elias-alvarez/null-ls.nvim'
 Plug 'ray-x/lsp_signature.nvim'
 Plug 'onsails/lspkind-nvim'
@@ -271,22 +271,14 @@ cmp.setup({
   }
 })
 
--- LspInstall
-require'lspinstall'.setup()
--- TODO: Auto install python, go, dockerfile, json, html, yaml
--- currently crashes neovim
+-- LSP
+local lsp_installer = require("nvim-lsp-installer")
 
--- Setup the lsp servers with 
-local servers = require'lspinstall'.installed_servers()
-for _, server in pairs(servers) do
-  require'lspconfig'[server].setup{
-    on_attach = on_attach,
-    flags = {
-      debounce_text_changes = 150,
-    },
-    capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-  }
-end
+lsp_installer.on_server_ready(function(server)
+    local opts = {}
+    opts.capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+    server:setup(opts)
+end)
 
 require "lsp_signature".setup({
     bind = true, -- This is mandatory, otherwise border config won't get registered.
