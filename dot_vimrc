@@ -15,15 +15,9 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 call plug#begin('~/.vim/plugged')
 Plug 'editorconfig/editorconfig-vim'
 
-" language pack
-"Plug 'sheerun/vim-polyglot'
-
-" vim snippets
+" snippets
+Plug 'L3MON4D3/LuaSnip'
 Plug 'honza/vim-snippets'
-Plug 'SirVer/ultisnips'
-
-" vscode snippets
-Plug 'hrsh7th/vim-vsnip'
 Plug 'rafamadriz/friendly-snippets'
 
 Plug 'terrortylor/nvim-comment'
@@ -32,17 +26,17 @@ Plug 'windwp/nvim-autopairs'
 " lsp
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/nvim-lsp-installer'
-Plug 'jose-elias-alvarez/null-ls.nvim'
 Plug 'ray-x/lsp_signature.nvim'
+Plug 'kosayoda/nvim-lightbulb'
 Plug 'onsails/lspkind-nvim'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-emoji'
 Plug 'hrsh7th/nvim-cmp'
-Plug 'quangnguyen30192/cmp-nvim-ultisnips'
+Plug 'saadparwaiz1/cmp_luasnip'
 
-Plug 'nvim-treesitter/nvim-treesitter', {'branch': '0.5-compat', 'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " colour schemes & icons
 Plug 'projekt0n/github-nvim-theme'
@@ -79,7 +73,7 @@ set backupcopy=yes " Fix file watchers
 set number
 set nowrap
 
-set termguicolors
+"set termguicolors
 
 set title         " Set terminal window
 set expandtab     " Tab in insert mode will produce spaces
@@ -111,7 +105,7 @@ set splitbelow splitright
 set hidden
 set signcolumn=number
 
-set updatetime=300
+set updatetime=250
 
 filetype plugin on
 syntax on
@@ -189,7 +183,11 @@ require('nvim_comment').setup()
 require'nvim-tree'.setup {
   view = {
     auto_resize = False,
-  }
+  },
+  git = {
+    enable = true,
+    ignore = false,
+  },
 }
 
 require('lualine').setup {
@@ -213,6 +211,19 @@ require'nvim-treesitter.configs'.setup {
 require('nvim-autopairs').setup{}
 
 -- lspconfig
+
+-- XXX: experimental effort to change from virtual_text to hover.
+vim.diagnostic.config({
+  virtual_text = false,
+  signs = true,
+  underline = true,
+  update_in_insert = true,
+})
+vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
+
+-- nvim-lightbulb
+vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()]]
+
 local nvim_lsp = require('lspconfig')
 
 local on_attach = function(client, bufnr)
@@ -239,6 +250,8 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  -- Code Actions via Telescope
+  buf_set_keymap('n', '<leader>ca', '<cmd>Telescope lsp_code_actions<CR>', opts)
   
   -- Set some keybinds conditional on server capabilities
   if client.resolved_capabilities.document_formatting then
@@ -248,15 +261,18 @@ local on_attach = function(client, bufnr)
   end
 end
 
+-- Setup luasnip
+require("luasnip.loaders.from_vscode").load()
+require("luasnip.loaders.from_snipmate").lazy_load()
+
 -- Setup nvim-cmp.
 local cmp = require'cmp'
 
 cmp.setup({
   snippet = {
     expand = function(args)
-      -- For `ultisnips` user.
-      vim.fn["UltiSnips#Anon"](args.body)
-    end,
+      require'luasnip'.lsp_expand(args.body)
+    end
   },
   mapping = {
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
@@ -267,7 +283,7 @@ cmp.setup({
   },
   sources = {
     { name = 'nvim_lsp' },
-    { name = 'ultisnips' },
+    { name = 'luasnip' },
     { name = 'buffer' },
     { name = 'path' },
     { name = 'emoji' },
@@ -329,6 +345,7 @@ require('lspkind').init({
 require("github-theme").setup({
   theme_style = "dimmed",
   hide_inactive_statusline = false,
-  -- other config
+  dark_sidebar = true,
+  dark_float = true,
 })
 EOF
