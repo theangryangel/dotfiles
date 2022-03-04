@@ -31,10 +31,10 @@ Plug 'kosayoda/nvim-lightbulb'
 Plug 'onsails/lspkind-nvim'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
-Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-emoji'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'j-hui/fidget.nvim'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
@@ -188,6 +188,9 @@ require'nvim-tree'.setup {
     enable = true,
     ignore = false,
   },
+  update_focused_file = {
+    enable = true,
+  },
 }
 
 require('lualine').setup {
@@ -267,8 +270,15 @@ require("luasnip.loaders.from_snipmate").lazy_load()
 
 -- Setup nvim-cmp.
 local cmp = require'cmp'
+local lspkind = require'lspkind'
 
 cmp.setup({
+  formatting = {
+    format = lspkind.cmp_format({
+      mode = 'symbol', -- show only symbol annotations
+      maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+    })
+  },
   snippet = {
     expand = function(args)
       require'luasnip'.lsp_expand(args.body)
@@ -285,7 +295,6 @@ cmp.setup({
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
     { name = 'buffer' },
-    { name = 'path' },
     { name = 'emoji' },
   }
 })
@@ -310,37 +319,7 @@ require "lsp_signature".setup({
     }
 })
 
-require('lspkind').init({
-    with_text = true,
-
-    symbol_map = {
-      Text = "",
-      Method = "",
-      Function = "",
-      Constructor = "",
-      Field = "ﰠ",
-      Variable = "",
-      Class = "ﴯ",
-      Interface = "",
-      Module = "",
-      Property = "ﰠ",
-      Unit = "塞",
-      Value = "",
-      Enum = "",
-      Keyword = "",
-      Snippet = "",
-      Color = "",
-      File = "",
-      Reference = "",
-      Folder = "",
-      EnumMember = "",
-      Constant = "",
-      Struct = "פּ",
-      Event = "",
-      Operator = "",
-      TypeParameter = ""
-    },
-})
+require"fidget".setup{}
 
 require("github-theme").setup({
   theme_style = "dimmed",
