@@ -13,6 +13,7 @@ vim.cmd [[
 ]]
 
 require('packer').startup(function(use) 
+use 'jeffkreeftmeijer/vim-numbertoggle'
 
 use 'editorconfig/editorconfig-vim'
 
@@ -22,10 +23,10 @@ use 'honza/vim-snippets'
 use 'rafamadriz/friendly-snippets'
 
 use {
-  'terrortylor/nvim-comment',
-  config = function()
-    require('nvim_comment').setup()
-  end
+    'numToStr/Comment.nvim',
+    config = function()
+        require('Comment').setup()
+    end
 }
 
 use {
@@ -85,6 +86,7 @@ use {
     }
   end
 }
+
 use 'romgrk/barbar.nvim'
 
 use {
@@ -122,6 +124,9 @@ use 'github/copilot.vim'
 end)
 
 --Basics
+vim.opt.backup = false
+vim.opt.backupcopy = "yes" -- fix file watchers
+
 vim.opt.title = true
 vim.opt.expandtab = true
 vim.opt.tw=80
@@ -142,7 +147,7 @@ vim.g.mapleader = ','
 vim.g.maplocalleader = ','
 
 --Set highlight on search
-vim.o.hlsearch = false
+vim.o.hlsearch = true
 
 --Make line numbers default
 vim.wo.number = true
