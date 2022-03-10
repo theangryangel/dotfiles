@@ -124,23 +124,25 @@ use 'github/copilot.vim'
 end)
 
 --Basics
-vim.opt.backup = false
+vim.opt.shortmess = "atIc" -- Don't show the Vim intro message
+vim.opt.backup = false -- no file system spam pls
 vim.opt.backupcopy = "yes" -- fix file watchers
 
 vim.opt.title = true
 vim.opt.expandtab = true
-vim.opt.tw=80
-vim.opt.tabstop=2
-vim.opt.shiftwidth=2
-vim.opt.softtabstop=2
+vim.opt.tw = 80
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.softtabstop = 2
 vim.opt.autoindent = true
 vim.opt.cursorline = true
 vim.opt.wrap = false
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.termguicolors = true
+vim.opt.clipboard = 'unnamedplus'
 
-vim.opt.backspace="indent,eol,start"
+vim.opt.backspace = "indent,eol,start"
 
 --Remap leader
 vim.g.mapleader = ','
@@ -148,6 +150,11 @@ vim.g.maplocalleader = ','
 
 --Set highlight on search
 vim.o.hlsearch = true
+vim.o.incsearch = true
+
+--Case insensitive searching UNLESS /C or capital in search
+vim.o.ignorecase = true
+vim.o.smartcase = true
 
 --Make line numbers default
 vim.wo.number = true
@@ -161,9 +168,6 @@ vim.o.breakindent = true
 --Save undo history
 vim.opt.undofile = true
 
---Case insensitive searching UNLESS /C or capital in search
-vim.o.ignorecase = true
-vim.o.smartcase = true
 
 --Decrease update time
 vim.o.updatetime = 250
