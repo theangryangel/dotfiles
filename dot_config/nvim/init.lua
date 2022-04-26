@@ -185,11 +185,11 @@ vim.wo.signcolumn = 'yes'
 vim.o.completeopt = 'menu,menuone,noselect'
 
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-  ignore_install = {}, -- List of parsers to ignore installing
+  ensure_installed = "all",
+  ignore_install = {},
   highlight = {
-    enable = true,     -- false will disable the whole extension
-    disable = {},      -- list of language that will be disabled
+    enable = true,
+    disable = {},
   },
 }
 
@@ -264,19 +264,20 @@ cmp.setup({
       require'luasnip'.lsp_expand(args.body)
     end
   },
-  mapping = {
+  mapping = cmp.mapping.preset.insert({
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.close(),
     ['<CR>'] = cmp.mapping.confirm(),
-  },
-  sources = {
+  }),
+  sources = cmp.config.sources({
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
-    { name = 'buffer' },
     { name = 'emoji' },
-  }
+  }, {
+    name = 'buffer'
+  })
 })
 
 -- LSP
