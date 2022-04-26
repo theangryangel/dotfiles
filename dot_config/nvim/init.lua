@@ -13,7 +13,6 @@ vim.cmd [[
 ]]
 
 require('packer').startup(function(use) 
-use 'jeffkreeftmeijer/vim-numbertoggle'
 
 use 'editorconfig/editorconfig-vim'
 
@@ -82,7 +81,8 @@ use {
       options = {
         theme = "auto",
         extensions = {'nvim-tree'},
-      }
+        globalstatus = true,
+      },
     }
   end
 }
@@ -114,6 +114,15 @@ use {
     }
   end
 }
+
+use {
+  'lewis6991/gitsigns.nvim',
+  config = function()
+    require('gitsigns').setup()
+  end
+}
+
+use "lukas-reineke/indent-blankline.nvim"
 
 -- Temporary workaround for netrw bug
 use 'felipec/vim-sanegx'
