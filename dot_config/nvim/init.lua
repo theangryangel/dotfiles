@@ -36,8 +36,38 @@ use {
 }
 
 -- lsp
-use 'neovim/nvim-lspconfig'
-use 'williamboman/nvim-lsp-installer'
+use {
+  'neovim/nvim-lspconfig',
+  requires = {
+    'williamboman/mason.nvim',
+    'williamboman/mason-lspconfig.nvim',
+  },
+  config = function ()
+    -- ensure this order.
+    require('mason').setup()
+    require('mason-lspconfig').setup({
+      ensure_installed = {
+        "dockerls", "pyright", "rust_analyzer", "eslint", "yamlls"
+      },
+    })
+    require('mason-lspconfig').setup_handlers {
+      -- fallback handler.
+      function (server_name)
+        local capabilities = require('cmp_nvim_lsp').default_capabilities()
+        require('lspconfig')[server_name].setup{
+          capabilities = capabilities
+        }
+      end,
+    }
+
+    vim.diagnostic.config({
+      virtual_text = false,
+      signs = true,
+      underline = true,
+      update_in_insert = true,
+    })
+  end
+}
 use 'ray-x/lsp_signature.nvim'
 use 'kosayoda/nvim-lightbulb'
 use 'onsails/lspkind-nvim'
@@ -46,13 +76,29 @@ use 'hrsh7th/cmp-buffer'
 use 'hrsh7th/cmp-emoji'
 use 'hrsh7th/nvim-cmp'
 use 'saadparwaiz1/cmp_luasnip'
-use 'j-hui/fidget.nvim'
+use {
+  'j-hui/fidget.nvim',
+  config = function()
+    require"fidget".setup{}
+  end
+}
 
-use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
+use {
+  'nvim-treesitter/nvim-treesitter',
+  run = ':TSUpdate',
+  config = function()
+    require'nvim-treesitter.configs'.setup {
+      ensure_installed = "all",
+      ignore_install = {},
+      highlight = {
+        enable = true,
+        disable = {},
+      },
+    }
+  end
+}
 
 -- colour schemes & icons
-use 'kyazdani42/nvim-web-devicons'
-
 use {
   'projekt0n/github-nvim-theme',
   commit = "715c554",
@@ -92,17 +138,21 @@ use 'romgrk/barbar.nvim'
 use {
   'folke/which-key.nvim',
   config = function()
+    require("which-key").setup {}
   end
 }
 
 use {
   'kyazdani42/nvim-tree.lua',
+  requires = {
+    'nvim-tree/nvim-web-devicons'
+  },
   config = function()
     vim.api.nvim_set_keymap("", "<Leader>nt", "<cmd>NvimTreeToggle<CR>", { })
 
     require'nvim-tree'.setup {
       view = {
-        auto_resize = False,
+        adaptive_size = False,
       },
       git = {
         enable = true,
@@ -126,10 +176,6 @@ use "lukas-reineke/indent-blankline.nvim"
 
 -- Temporary workaround for netrw bug
 use 'felipec/vim-sanegx'
-
--- Copilot
-use 'github/copilot.vim'
-
 end)
 
 --Basics
@@ -177,72 +223,51 @@ vim.o.breakindent = true
 --Save undo history
 vim.opt.undofile = true
 
-
 --Decrease update time
 vim.o.updatetime = 250
 vim.wo.signcolumn = 'yes'
 
 vim.o.completeopt = 'menu,menuone,noselect'
 
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = "all",
-  ignore_install = {},
-  highlight = {
-    enable = true,
-    disable = {},
-  },
-}
-
 -- lspconfig
-
 -- XXX: experimental effort to change from virtual_text to hover.
-vim.diagnostic.config({
-  virtual_text = false,
-  signs = true,
-  underline = true,
-  update_in_insert = true,
-})
 vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
 
 -- nvim-lightbulb
 vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()]]
 
-local nvim_lsp = require('lspconfig')
+vim.api.nvim_create_autocmd('LspAttach',  {
+  desc = "LSP Actions",
+  callback = function()
+    -- local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+    --
+    -- buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-local on_attach = function(client, bufnr)
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-  -- Mappings
-
-  local opts = { noremap=true, silent=true }
-  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-  -- Code Actions via Telescope
-  buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  
-  -- Set some keybinds conditional on server capabilities
-  if client.resolved_capabilities.document_formatting then
-      buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-  elseif client.resolved_capabilities.document_range_formatting then
-      buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+    -- Mappings
+    local opts = { buffer = bufnr, noremap = true, silent = true }
+    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+    vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+    vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, opts)
+    vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, opts)
+    vim.keymap.set("n", "<space>wl", function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, opts)
+    vim.keymap.set("n", "<space>lD", vim.lsp.buf.type_definition, opts)
+    vim.keymap.set("n", "<space>lr", vim.lsp.buf.rename, opts)
+    vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+    vim.keymap.set("n", "gl", vim.diagnostic.open_float, opts)
+    vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+    vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
+    vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist, opts)
+    vim.keymap.set("n", "<space>li", "<cmd>LspInfo<CR>", opts)
+    vim.keymap.set("n", "<space>lI", "<cmd>MasonCR>", opts)
+    -- Code Actions via Telescope
+    vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   end
-end
+})
 
 -- Setup luasnip
 require("luasnip.loaders.from_vscode").load()
@@ -280,16 +305,6 @@ cmp.setup({
   })
 })
 
--- LSP
-local lsp_installer = require("nvim-lsp-installer")
-
-lsp_installer.on_server_ready(function(server)
-    local opts = {}
-    opts.capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-    opts.on_attach = on_attach
-    server:setup(opts)
-end)
-
 require "lsp_signature".setup({
     bind = true, -- This is mandatory, otherwise border config won't get registered.
 
@@ -299,6 +314,3 @@ require "lsp_signature".setup({
       border = "none"
     }
 })
-
-require"fidget".setup{}
-require("which-key").setup {}

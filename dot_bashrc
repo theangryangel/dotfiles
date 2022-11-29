@@ -86,6 +86,9 @@ if [ $? -ge 2 ]; then
   ssh-add ~/.ssh/id_rsa
 fi
 
+if [ -x "$(command -v invoke)" ]; then
+  eval "$(invoke --print-completion-script=bash)"
+fi
 
 # BEGIN_KITTY_SHELL_INTEGRATION
 if test -n "$KITTY_INSTALLATION_DIR" -a -e "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; then source "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; fi
