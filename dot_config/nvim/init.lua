@@ -1,184 +1,9 @@
--- Install packer
-local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
+-- Remapping leader, etc. to ensure that any plugins use the correct
+-- configuration
+vim.g.mapleader = ','
+vim.g.maplocalleader = ','
 
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
-end
-
-vim.cmd [[
-  augroup Packer
-    autocmd!
-    autocmd BufWritePost init.lua PackerCompile
-  augroup end
-]]
-
-require('packer').startup(function(use) 
-
-use 'editorconfig/editorconfig-vim'
-
--- snippets
-use 'L3MON4D3/LuaSnip'
-use 'honza/vim-snippets'
-use 'rafamadriz/friendly-snippets'
-
-use {
-    'numToStr/Comment.nvim',
-    config = function()
-        require('Comment').setup()
-    end
-}
-
-use {
-  'windwp/nvim-autopairs',
-  config = function()
-    require('nvim-autopairs').setup{}
-  end
-}
-
--- lsp
-use {
-  'neovim/nvim-lspconfig',
-  requires = {
-    'williamboman/mason.nvim',
-    'williamboman/mason-lspconfig.nvim',
-  },
-  config = function ()
-    -- ensure this order.
-    require('mason').setup()
-    require('mason-lspconfig').setup({
-      ensure_installed = {
-        "dockerls", "pyright", "rust_analyzer", "eslint", "yamlls"
-      },
-    })
-    require('mason-lspconfig').setup_handlers {
-      -- fallback handler.
-      function (server_name)
-        local capabilities = require('cmp_nvim_lsp').default_capabilities()
-        require('lspconfig')[server_name].setup{
-          capabilities = capabilities
-        }
-      end,
-    }
-
-    vim.diagnostic.config({
-      virtual_text = false,
-      signs = true,
-      underline = true,
-      update_in_insert = true,
-    })
-  end
-}
-use 'ray-x/lsp_signature.nvim'
-use 'kosayoda/nvim-lightbulb'
-use 'onsails/lspkind-nvim'
-use 'hrsh7th/cmp-nvim-lsp'
-use 'hrsh7th/cmp-buffer'
-use 'hrsh7th/cmp-emoji'
-use 'hrsh7th/nvim-cmp'
-use 'saadparwaiz1/cmp_luasnip'
-use {
-  'j-hui/fidget.nvim',
-  config = function()
-    require"fidget".setup{}
-  end
-}
-
-use {
-  'nvim-treesitter/nvim-treesitter',
-  run = ':TSUpdate',
-  config = function()
-    require'nvim-treesitter.configs'.setup {
-      ensure_installed = "all",
-      ignore_install = {},
-      highlight = {
-        enable = true,
-        disable = {},
-      },
-    }
-  end
-}
-
--- colour schemes & icons
-use {
-  'projekt0n/github-nvim-theme',
-  commit = "715c554",
-  config = function()
-    require("github-theme").setup({
-      theme_style = "dimmed",
-      hide_inactive_statusline = false,
-      dark_sidebar = true,
-      dark_float = true,
-    })
-  end
-}
-
--- Telescope
-use {
-  'nvim-telescope/telescope.nvim',
-  requires = { {'nvim-lua/plenary.nvim'} }
-}
-
--- UI
-use {
-  "hoob3rt/lualine.nvim",
-  after = "github-nvim-theme",
-  config = function()
-    require("lualine").setup {
-      options = {
-        theme = "auto",
-        extensions = {'nvim-tree'},
-        globalstatus = true,
-      },
-    }
-  end
-}
-
-use 'romgrk/barbar.nvim'
-
-use {
-  'folke/which-key.nvim',
-  config = function()
-    require("which-key").setup {}
-  end
-}
-
-use {
-  'kyazdani42/nvim-tree.lua',
-  requires = {
-    'nvim-tree/nvim-web-devicons'
-  },
-  config = function()
-    vim.api.nvim_set_keymap("", "<Leader>nt", "<cmd>NvimTreeToggle<CR>", { })
-
-    require'nvim-tree'.setup {
-      view = {
-        adaptive_size = False,
-      },
-      git = {
-        enable = true,
-        ignore = false,
-      },
-      update_focused_file = {
-        enable = true,
-      },
-    }
-  end
-}
-
-use {
-  'lewis6991/gitsigns.nvim',
-  config = function()
-    require('gitsigns').setup()
-  end
-}
-
-use "lukas-reineke/indent-blankline.nvim"
-
--- Temporary workaround for netrw bug
-use 'felipec/vim-sanegx'
-end)
-
---Basics
+-- Basics
 vim.opt.shortmess = "atIc" -- Don't show the Vim intro message
 vim.opt.backup = false -- no file system spam pls
 vim.opt.backupcopy = "yes" -- fix file watchers
@@ -199,50 +24,266 @@ vim.opt.clipboard = 'unnamedplus'
 
 vim.opt.backspace = "indent,eol,start"
 
---Remap leader
-vim.g.mapleader = ','
-vim.g.maplocalleader = ','
-
---Set highlight on search
+-- Set highlight on search
 vim.o.hlsearch = true
 vim.o.incsearch = true
 
---Case insensitive searching UNLESS /C or capital in search
+-- Case insensitive searching UNLESS /C or capital in search
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
---Make line numbers default
+-- Make line numbers default
 vim.wo.number = true
 
---Enable mouse mode
+-- Enable mouse mode
 vim.o.mouse = 'a'
 
---Enable break indent
+-- Enable break indent
 vim.o.breakindent = true
 
---Save undo history
+-- Save undo history
 vim.opt.undofile = true
 
---Decrease update time
+-- Decrease update time
 vim.o.updatetime = 250
 vim.wo.signcolumn = 'yes'
 
 vim.o.completeopt = 'menu,menuone,noselect'
 
--- lspconfig
--- XXX: experimental effort to change from virtual_text to hover.
-vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
+-- bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "--single-branch",
+    "https://github.com/folke/lazy.nvim.git",
+    lazypath,
+  })
+end
 
--- nvim-lightbulb
-vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()]]
+vim.opt.runtimepath:prepend(lazypath)
+
+-- Plugins.
+require("lazy").setup({
+  {'editorconfig/editorconfig-vim'},
+
+  {
+    'nvim-treesitter/nvim-treesitter',
+    build = ':TSUpdate',
+    config = function()
+      require'nvim-treesitter.configs'.setup {
+        ensure_installed = "all",
+        ignore_install = {},
+        highlight = {
+          enable = true,
+          disable = {},
+        },
+      }
+    end
+  },
+
+  {
+    'numToStr/Comment.nvim',
+    config = function()
+      require('Comment').setup()
+    end
+  },
+
+  {
+    'windwp/nvim-autopairs',
+    config = function()
+      require('nvim-autopairs').setup{}
+    end
+  },
+
+  -- LSP
+  {
+    'neovim/nvim-lspconfig',
+    dependencies = {
+      'williamboman/mason.nvim',
+      'williamboman/mason-lspconfig.nvim',
+      -- UI status updates from LSP
+      'j-hui/fidget.nvim',
+    }
+  },
+
+  {
+    'kosayoda/nvim-lightbulb',
+    dependencies = {
+      'antoinemadec/FixCursorHold.nvim',
+    },
+    config = function()
+      require('nvim-lightbulb').setup({
+        autocmd = {
+          enabled = true
+        }
+      })
+    end
+  },
+
+  -- Debugging
+  {
+    'mfussenegger/nvim-dap',
+    dependencies = {
+      'mfussenegger/nvim-dap-python'
+    },
+  },
+
+  -- Autocomplete
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      { "hrsh7th/cmp-buffer" },
+      { "hrsh7th/cmp-nvim-lsp" },
+      { "hrsh7th/cmp-nvim-lsp-signature-help" },
+      { "hrsh7th/cmp-buffer" },
+      { "hrsh7th/cmp-path" },
+      { 'hrsh7th/cmp-emoji' },
+      { 'kosayoda/nvim-lightbulb' },
+      { 'onsails/lspkind-nvim' },
+      { "saadparwaiz1/cmp_luasnip" },
+      -- snippets
+      { 'L3MON4D3/LuaSnip' },
+      {'honza/vim-snippets'},
+      {'rafamadriz/friendly-snippets'},
+    },
+  },
+
+  -- Telescope
+  {
+    'nvim-telescope/telescope.nvim',
+    dependencies = {
+      { 'nvim-lua/plenary.nvim' },
+      { 'nvim-telescope/telescope-dap.nvim' },
+      { 'nvim-telescope/telescope-ui-select.nvim' },
+    },
+    config = function()
+      require('telescope').load_extension('dap')
+      require('telescope').load_extension('ui-select')
+    end
+  },
+
+  -- UI
+  {
+    'projekt0n/github-nvim-theme',
+    config = function()
+      require("github-theme").setup({
+        theme_style = "dimmed",
+        hide_inactive_statusline = false,
+        dark_sidebar = true,
+        dark_float = true,
+      })
+    end,
+  },
+  
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = {
+      {'projekt0n/github-nvim-theme'},
+      {'nvim-tree/nvim-tree.lua'}
+    },
+    config = function()
+      require("lualine").setup {
+        options = {
+          theme = "auto",
+          extensions = {'nvim-tree'},
+          globalstatus = true,
+        },
+      }
+    end
+  },
+
+  { 'romgrk/barbar.nvim' },
+
+  {
+    'folke/which-key.nvim',
+    config = function()
+      require("which-key").setup {}
+    end
+  },
+
+  {
+    'nvim-tree/nvim-tree.lua',
+    dependencies = {
+      'nvim-tree/nvim-web-devicons'
+    },
+    config = function()
+      require'nvim-tree'.setup {
+        git = {
+          enable = true,
+          ignore = false,
+        },
+        update_focused_file = {
+          enable = true,
+        },
+        actions = {
+          open_file = {
+            resize_window = false
+          }
+        }
+      }
+    end
+  },
+
+  {
+    "simrat39/symbols-outline.nvim",
+    cmd = "SymbolsOutline",
+    config = function()
+      require("symbols-outline").setup()
+    end,
+  },
+
+  {
+    'lewis6991/gitsigns.nvim',
+    config = true
+  },
+
+  { "lukas-reineke/indent-blankline.nvim" },
+
+  -- Temporary workaround for netrw bug
+  { 'felipec/vim-sanegx' },
+})
+
+
+-- Nvim Tree
+vim.api.nvim_set_keymap("", "<Leader>nt", "<cmd>NvimTreeToggle<CR>", { })
+
+-- Symbols Outline
+vim.keymap.set("n", "<leader>cs", "<cmd>SymbolsOutline<cr>", { desc = "Symbols Outline" })
+
+-- LSP setup
+require("fidget").setup()
+require('mason').setup()
+require('mason-lspconfig').setup({
+  ensure_installed = {
+    "dockerls", "pyright", "rust_analyzer", "eslint", "yamlls"
+  },
+})
+require('mason-lspconfig').setup_handlers {
+  -- fallback handler.
+  function (server_name)
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+    require('lspconfig')[server_name].setup{
+      capabilities = capabilities
+    }
+  end,
+}
+
+vim.diagnostic.config({
+  virtual_text = true,
+  signs = true,
+  underline = true,
+  update_in_insert = true,
+})
+
+-- XXX: experimental effort to change from virtual_text to hover.
+-- vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
 
 vim.api.nvim_create_autocmd('LspAttach',  {
   desc = "LSP Actions",
   callback = function()
-    -- local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-    --
-    -- buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
     -- Mappings
     local opts = { buffer = bufnr, noremap = true, silent = true }
     vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
@@ -255,15 +296,13 @@ vim.api.nvim_create_autocmd('LspAttach',  {
     vim.keymap.set("n", "<space>wl", function()
       print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, opts)
-    vim.keymap.set("n", "<space>lD", vim.lsp.buf.type_definition, opts)
-    vim.keymap.set("n", "<space>lr", vim.lsp.buf.rename, opts)
+    vim.keymap.set("n", "<leader>lD", vim.lsp.buf.type_definition, opts)
+    vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, opts)
     vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
     vim.keymap.set("n", "gl", vim.diagnostic.open_float, opts)
     vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
     vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
     vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist, opts)
-    vim.keymap.set("n", "<space>li", "<cmd>LspInfo<CR>", opts)
-    vim.keymap.set("n", "<space>lI", "<cmd>MasonCR>", opts)
     -- Code Actions via Telescope
     vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   end
@@ -300,17 +339,8 @@ cmp.setup({
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
     { name = 'emoji' },
+    { name = 'nvim_lsp_signature_help' },
   }, {
     name = 'buffer'
   })
-})
-
-require "lsp_signature".setup({
-    bind = true, -- This is mandatory, otherwise border config won't get registered.
-
-    -- The following makes lsp_signature look like the default floating windows.
-    hint_enable = false,
-    handler_opts = {
-      border = "none"
-    }
 })
