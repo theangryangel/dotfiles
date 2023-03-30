@@ -127,7 +127,18 @@ require("lazy").setup({
   {
     'mfussenegger/nvim-dap',
     dependencies = {
-      'mfussenegger/nvim-dap-python'
+      {
+        'jay-babu/mason-nvim-dap.nvim',
+        dependencies = { "nvim-dap" },
+        cmd = { "DapInstall", "DapUninstall" },
+        opts = { automatic_setup = true },
+      },
+      { 
+        "rcarriga/nvim-dap-ui",
+        config = function()
+          require('dapui').setup()
+        end
+      }
     },
   },
 
@@ -145,7 +156,9 @@ require("lazy").setup({
       { 'onsails/lspkind-nvim' },
       { "saadparwaiz1/cmp_luasnip" },
       -- snippets
-      { 'L3MON4D3/LuaSnip' },
+      { 
+	'L3MON4D3/LuaSnip', version = "v1.2.1", 
+      },
       {'honza/vim-snippets'},
       {'rafamadriz/friendly-snippets'},
     },
@@ -240,18 +253,43 @@ require("lazy").setup({
     config = true
   },
 
+  {
+    "kevinhwang91/nvim-ufo",
+    dependencies = {
+      "kevinhwang91/promise-async"
+    }
+  },
+
   { "lukas-reineke/indent-blankline.nvim" },
 
   -- Temporary workaround for netrw bug
   { 'felipec/vim-sanegx' },
-})
 
+  -- extra syntaxes
+  { 'towolf/vim-helm' },
+})
 
 -- Nvim Tree
 vim.api.nvim_set_keymap("", "<Leader>nt", "<cmd>NvimTreeToggle<CR>", { })
 
 -- Symbols Outline
 vim.keymap.set("n", "<leader>cs", "<cmd>SymbolsOutline<cr>", { desc = "Symbols Outline" })
+
+-- ufo
+vim.o.foldcolumn = '1' -- '0' is not bad
+vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
+
+-- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
+vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+
+require('ufo').setup({
+    provider_selector = function(bufnr, filetype, buftype)
+        return {'treesitter', 'indent'}
+    end
+})
 
 -- LSP setup
 require("fidget").setup()
@@ -344,3 +382,4 @@ cmp.setup({
     name = 'buffer'
   })
 })
+
