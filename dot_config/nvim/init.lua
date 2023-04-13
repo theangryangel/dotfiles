@@ -183,14 +183,21 @@ require("lazy").setup({
     'projekt0n/github-nvim-theme',
     config = function()
       require("github-theme").setup({
-        theme_style = "dimmed",
-        hide_inactive_statusline = false,
-        dark_sidebar = true,
-        dark_float = true,
+        options = {
+          hide_nc_statusline = false,
+          darken = {
+            floats = true,
+            sidebars = {
+              enable = true
+            }
+          }
+        }
       })
+
+      vim.cmd('colorscheme github_dimmed')
     end,
   },
-  
+
   {
     "nvim-lualine/lualine.nvim",
     dependencies = {
@@ -237,6 +244,8 @@ require("lazy").setup({
           }
         }
       }
+
+      vim.api.nvim_set_keymap("", "<Leader>nt", "<cmd>NvimTreeToggle<CR>", { })
     end
   },
 
@@ -254,6 +263,30 @@ require("lazy").setup({
   },
 
   {
+    "luukvbaal/statuscol.nvim",
+    lazy = false,
+    config = function()
+      local builtin = require("statuscol.builtin")
+      require("statuscol").setup({
+        bt_ignore = {"terminal", "nofile"},
+        relculright = true,
+        segments = {
+          {text = {builtin.foldfunc}, click = "v:lua.ScFa"},
+          {
+            sign = {name = {"Diagnostic"}, maxwidth = 2, auto = true},
+            click = "v:lua.ScSa"
+          },
+          {text = {builtin.lnumfunc}, click = "v:lua.ScLa"},
+          {
+            sign = {name = {".*"}, maxwidth = 2, colwidth = 1, auto = true},
+            click = "v:lua.ScSa"
+          },
+        },
+      })
+    end
+  },
+
+  {
     "kevinhwang91/nvim-ufo",
     dependencies = {
       "kevinhwang91/promise-async"
@@ -268,9 +301,6 @@ require("lazy").setup({
   -- extra syntaxes
   { 'towolf/vim-helm' },
 })
-
--- Nvim Tree
-vim.api.nvim_set_keymap("", "<Leader>nt", "<cmd>NvimTreeToggle<CR>", { })
 
 -- Symbols Outline
 vim.keymap.set("n", "<leader>cs", "<cmd>SymbolsOutline<cr>", { desc = "Symbols Outline" })
