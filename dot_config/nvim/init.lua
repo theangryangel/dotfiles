@@ -316,7 +316,52 @@ require("lazy").setup({
     config = function()
       require('barbar').setup {
         animation = false,
-        auto_hide = true,
+        auto_hide = false,
+
+        hide = {
+          extensions = true
+        },
+        icons = {
+          button = '',
+          -- Enables / disables diagnostic symbols
+          diagnostics = {
+            [vim.diagnostic.severity.ERROR] = {enabled = true, icon = 'ﬀ'},
+            [vim.diagnostic.severity.WARN] = {enabled = false},
+            [vim.diagnostic.severity.INFO] = {enabled = false},
+            [vim.diagnostic.severity.HINT] = {enabled = false},
+          },
+          filetype = {
+            -- Sets the icon's highlight group.
+            -- If false, will use nvim-web-devicons colors
+            custom_colors = false,
+
+            -- Requires `nvim-web-devicons` if `true`
+            enabled = true,
+          },
+
+          -- custom separator icons/characters
+
+          separator = {left = '', right = '│'},
+
+          -- Configure the icons on the bufferline when modified or pinned.
+          -- Supports all the base icon options.
+          modified = {button = '●'},
+          pinned = {
+            buffer_index = true, filename = true, button = '', separator = { right = '│', left = ''} 
+          },
+
+          -- Configure the icons on the bufferline based on the visibility of a buffer.
+          -- Supports all the base icon options, plus `modified` and `pinned`.
+          alternate = {filetype = {enabled = false}},
+          inactive = {button = '', separator = {left = '', right = '│'}},
+        },
+        sidebar_filetypes = {
+          NvimTree = true
+        },
+        -- icon_pinned = '󰐃',
+        exclude_ft = {'netrw'},
+        -- closable = false,
+        highlight_visible = false,
       }
     end
   },
