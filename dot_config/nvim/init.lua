@@ -67,7 +67,9 @@ vim.opt.runtimepath:prepend(lazypath)
 
 -- Plugins.
 require("lazy").setup({
-  {'editorconfig/editorconfig-vim'},
+  -- editorconfig is supported out of the box under neovim 0.9+
+  -- 🥳
+  --{'editorconfig/editorconfig-vim'},
 
   {
     'nvim-treesitter/nvim-treesitter',
@@ -106,7 +108,26 @@ require("lazy").setup({
       'williamboman/mason-lspconfig.nvim',
       -- UI status updates from LSP
       'j-hui/fidget.nvim',
-    }
+    },
+    config = function()
+      -- LSP setup
+      require("fidget").setup()
+      require('mason').setup()
+      require('mason-lspconfig').setup({
+        ensure_installed = {
+          "dockerls", "pyright", "rust_analyzer", "eslint", "yamlls"
+        },
+      })
+      require('mason-lspconfig').setup_handlers {
+        -- fallback handler.
+        function (server_name)
+          local capabilities = require('cmp_nvim_lsp').default_capabilities()
+          require('lspconfig')[server_name].setup{
+            capabilities = capabilities
+          }
+        end,
+      }
+    end
   },
 
   {
@@ -156,12 +177,90 @@ require("lazy").setup({
       { 'onsails/lspkind-nvim' },
       { "saadparwaiz1/cmp_luasnip" },
       -- snippets
-      { 
-	'L3MON4D3/LuaSnip', version = "v1.2.1", 
+      {
+        'L3MON4D3/LuaSnip', 
+        version = "v1.2.1", 
       },
       {'honza/vim-snippets'},
       {'rafamadriz/friendly-snippets'},
     },
+    config = function()
+      vim.diagnostic.config({
+        virtual_text = true,
+        signs = true,
+        underline = true,
+        update_in_insert = true,
+      })
+
+      -- XXX: experimental effort to change from virtual_text to hover.
+      -- vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
+
+      vim.api.nvim_create_autocmd('LspAttach',  {
+        desc = "LSP Actions",
+        callback = function()
+          -- Mappings
+          local opts = { buffer = bufnr, noremap = true, silent = true }
+          vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+          vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+          vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+          vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+          vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+          vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, opts)
+          vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, opts)
+          vim.keymap.set("n", "<space>wl", function()
+            print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+          end, opts)
+          vim.keymap.set("n", "<leader>lD", vim.lsp.buf.type_definition, opts)
+          vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, opts)
+          vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+          vim.keymap.set("n", "gl", vim.diagnostic.open_float, opts)
+          vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+          vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
+          vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist, opts)
+          -- Code Actions via Telescope
+          vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+        end
+      })
+
+      -- Setup luasnip
+      require("luasnip.loaders.from_vscode").load()
+      require("luasnip.loaders.from_snipmate").lazy_load()
+
+      -- Setup nvim-cmp.
+      local cmp = require'cmp'
+      local lspkind = require'lspkind'
+
+      cmp.setup({
+        formatting = {
+          format = lspkind.cmp_format({
+            mode = 'symbol', -- show only symbol annotations
+            maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+          })
+        },
+        snippet = {
+          expand = function(args)
+            require'luasnip'.lsp_expand(args.body)
+          end
+        },
+        mapping = cmp.mapping.preset.insert({
+          ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+          ['<C-f>'] = cmp.mapping.scroll_docs(4),
+          ['<C-Space>'] = cmp.mapping.complete(),
+          ['<C-e>'] = cmp.mapping.close(),
+          ['<CR>'] = cmp.mapping.confirm(),
+        }),
+        sources = cmp.config.sources({
+          { name = 'nvim_lsp' },
+          { name = 'nvim_lsp_signature_help' },
+          { name = 'luasnip' },
+          { name = 'emoji' },
+          { name = 'buffer' },
+          { name = 'path' }
+        }, {
+          name = 'buffer'
+        })
+      })
+    end
   },
 
   -- Telescope
@@ -181,20 +280,17 @@ require("lazy").setup({
   -- UI
   {
     'projekt0n/github-nvim-theme',
+    lazy = false,
+    branch = '0.0.x',
     config = function()
       require("github-theme").setup({
-        options = {
-          hide_nc_statusline = false,
-          darken = {
-            floats = true,
-            sidebars = {
-              enable = true
-            }
-          }
-        }
+        hide_inactive_statusline = false,
+        dark_float = true,
+        dark_sidebar = true,
       })
 
       vim.cmd('colorscheme github_dimmed')
+      vim.cmd('highlight FoldColumn guibg=#22272e guifg=#909dab')
     end,
   },
 
@@ -215,7 +311,15 @@ require("lazy").setup({
     end
   },
 
-  { 'romgrk/barbar.nvim' },
+  { 
+    'romgrk/barbar.nvim',
+    config = function()
+      require('barbar').setup {
+        animation = false,
+        auto_hide = true,
+      }
+    end
+  },
 
   {
     'folke/which-key.nvim',
@@ -250,166 +354,90 @@ require("lazy").setup({
   },
 
   {
-    "simrat39/symbols-outline.nvim",
-    cmd = "SymbolsOutline",
-    config = function()
-      require("symbols-outline").setup()
-    end,
-  },
-
-  {
     'lewis6991/gitsigns.nvim',
     config = true
   },
 
   {
     "luukvbaal/statuscol.nvim",
-    lazy = false,
-    config = function()
+    event = "VimEnter",
+    opts = function()
       local builtin = require("statuscol.builtin")
-      require("statuscol").setup({
-        bt_ignore = {"terminal", "nofile"},
+      return {
         relculright = true,
+        setopt = true,
         segments = {
-          {text = {builtin.foldfunc}, click = "v:lua.ScFa"},
           {
-            sign = {name = {"Diagnostic"}, maxwidth = 2, auto = true},
-            click = "v:lua.ScSa"
+            sign = {
+              name = {
+                "Diagnostic"
+              },
+              maxwidth = 1,
+              colwidth = 2,
+              auto = false,
+            },
+            click = "v:lua.ScSa",
           },
-          {text = {builtin.lnumfunc}, click = "v:lua.ScLa"},
+          { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
           {
-            sign = {name = {".*"}, maxwidth = 2, colwidth = 1, auto = true},
-            click = "v:lua.ScSa"
+            sign = {
+              name = { "GitSigns" },
+              maxwidth = 1,
+              colwidth = 1,
+              auto = false,
+              fillchar = "│",
+              fillcharhl = "StatusColumnSeparator",
+            },
+            click = "v:lua.ScSa",
           },
+          { 
+            text = { builtin.foldfunc }, 
+            click = "v:lua.ScFa",
+          },
+          { 
+            text = { " " }, 
+          },
+
         },
-      })
-    end
+        ft_ignore = {
+          "help",
+          "vim",
+          "NvimTree",
+          "lazy",
+          "toggleterm",
+        },
+        bt_ignore = {"terminal", "nofile"},
+      }
+    end,
   },
 
   {
     "kevinhwang91/nvim-ufo",
+    event = "VimEnter",
     dependencies = {
       "kevinhwang91/promise-async"
-    }
+    },
+    config = function() 
+      require('ufo').setup({
+        provider_selector = function(bufnr, filetype, buftype)
+          return {'treesitter', 'indent'}
+        end
+      })
+      -- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
+      vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+      vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+
+      -- ufo
+      vim.o.foldcolumn = '1' -- '0' is not bad
+      vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+      vim.o.foldlevelstart = 99
+      vim.o.foldenable = true
+      vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
+    end
   },
 
   { "lukas-reineke/indent-blankline.nvim" },
 
   -- Temporary workaround for netrw bug
   { 'felipec/vim-sanegx' },
-
-  -- extra syntaxes
-  { 'towolf/vim-helm' },
 })
-
--- Symbols Outline
-vim.keymap.set("n", "<leader>cs", "<cmd>SymbolsOutline<cr>", { desc = "Symbols Outline" })
-
--- ufo
-vim.o.foldcolumn = '1' -- '0' is not bad
-vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
-vim.o.foldlevelstart = 99
-vim.o.foldenable = true
-
--- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
-vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
-vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
-
-require('ufo').setup({
-    provider_selector = function(bufnr, filetype, buftype)
-        return {'treesitter', 'indent'}
-    end
-})
-
--- LSP setup
-require("fidget").setup()
-require('mason').setup()
-require('mason-lspconfig').setup({
-  ensure_installed = {
-    "dockerls", "pyright", "rust_analyzer", "eslint", "yamlls"
-  },
-})
-require('mason-lspconfig').setup_handlers {
-  -- fallback handler.
-  function (server_name)
-    local capabilities = require('cmp_nvim_lsp').default_capabilities()
-    require('lspconfig')[server_name].setup{
-      capabilities = capabilities
-    }
-  end,
-}
-
-vim.diagnostic.config({
-  virtual_text = true,
-  signs = true,
-  underline = true,
-  update_in_insert = true,
-})
-
--- XXX: experimental effort to change from virtual_text to hover.
--- vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
-
-vim.api.nvim_create_autocmd('LspAttach',  {
-  desc = "LSP Actions",
-  callback = function()
-    -- Mappings
-    local opts = { buffer = bufnr, noremap = true, silent = true }
-    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-    vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
-    vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, opts)
-    vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, opts)
-    vim.keymap.set("n", "<space>wl", function()
-      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end, opts)
-    vim.keymap.set("n", "<leader>lD", vim.lsp.buf.type_definition, opts)
-    vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, opts)
-    vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-    vim.keymap.set("n", "gl", vim.diagnostic.open_float, opts)
-    vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-    vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
-    vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist, opts)
-    -- Code Actions via Telescope
-    vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  end
-})
-
--- Setup luasnip
-require("luasnip.loaders.from_vscode").load()
-require("luasnip.loaders.from_snipmate").lazy_load()
-
--- Setup nvim-cmp.
-local cmp = require'cmp'
-local lspkind = require'lspkind'
-
-cmp.setup({
-  formatting = {
-    format = lspkind.cmp_format({
-      mode = 'symbol', -- show only symbol annotations
-      maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-    })
-  },
-  snippet = {
-    expand = function(args)
-      require'luasnip'.lsp_expand(args.body)
-    end
-  },
-  mapping = cmp.mapping.preset.insert({
-    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.close(),
-    ['<CR>'] = cmp.mapping.confirm(),
-  }),
-  sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' },
-    { name = 'emoji' },
-    { name = 'nvim_lsp_signature_help' },
-  }, {
-    name = 'buffer'
-  })
-})
-
