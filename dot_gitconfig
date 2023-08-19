@@ -1,10 +1,10 @@
 [user]
 	name = Karl Southern
 	email = karl@theangryangel.co.uk
-	signingkey = /home/karl/.ssh/id_rsa.pub
+	signingkey = /home/karl/.ssh/id_ed25519.pub
 [core]
 	excludesfile = ~/.gitignore
-	editor = /usr/bin/nvim
+	editor = nvim
 	quotepath = false
 
 [alias]

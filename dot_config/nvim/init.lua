@@ -107,7 +107,10 @@ require("lazy").setup({
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
       -- UI status updates from LSP
-      'j-hui/fidget.nvim',
+      {
+        'j-hui/fidget.nvim',
+        tag = "legacy",
+      },
     },
     config = function()
       -- LSP setup
