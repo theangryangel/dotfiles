@@ -50,6 +50,13 @@ vim.wo.signcolumn = 'yes'
 
 vim.o.completeopt = 'menu,menuone,noselect'
 
+if vim.g.neovide then
+  vim.o.guifont = "JetBrainsMono Nerd Font:h11"
+  vim.g.neovide_confirm_quit = true
+  vim.g.neovide_cursor_animation_length = 0
+  vim.g.neovide_cursor_trail_size = 0
+end
+
 -- bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -127,20 +134,6 @@ require("lazy").setup({
           }
         end,
       }
-    end
-  },
-
-  {
-    'kosayoda/nvim-lightbulb',
-    dependencies = {
-      'antoinemadec/FixCursorHold.nvim',
-    },
-    config = function()
-      require('nvim-lightbulb').setup({
-        autocmd = {
-          enabled = true
-        }
-      })
     end
   },
 
@@ -364,6 +357,19 @@ require("lazy").setup({
         highlight_visible = false,
       }
     end
+  },
+
+  {
+    "utilyre/barbecue.nvim",
+    name = "barbecue",
+    version = "*",
+    dependencies = {
+      "SmiteshP/nvim-navic",
+      "nvim-tree/nvim-web-devicons", -- optional dependency
+    },
+    opts = {
+      -- configurations go here
+    },
   },
 
   {

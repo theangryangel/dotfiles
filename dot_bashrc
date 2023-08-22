@@ -96,3 +96,11 @@ if [ -x "$(command -v pipx)" ]; then
   eval "$(register-python-argcomplete pipx)"
 fi
 
+command -v flux >/dev/null && . <(flux completion bash)
+command -v kubectl >/dev/null && . <(kubectl completion bash)
+
+alias docker-compose="docker compose --compatibility $@"
+. "$HOME/.cargo/env"
+
+[[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
+command -v atuin && eval "$(atuin init bash --disable-up-arrow)"
