@@ -72,6 +72,88 @@ end
 
 vim.opt.runtimepath:prepend(lazypath)
 
+-- TODO: shrink this list to what I'm actually using. I've borrowed this from
+-- LunarVim.
+local icons = {
+  ui = {
+    ArrowCircleDown = "",
+    ArrowCircleLeft = "",
+    ArrowCircleRight = "",
+    ArrowCircleUp = "",
+    BoldArrowDown = "",
+    BoldArrowLeft = "",
+    BoldArrowRight = "",
+    BoldArrowUp = "",
+    BoldClose = "",
+    BoldDividerLeft = "",
+    BoldDividerRight = "",
+    BoldLineLeft = "▎",
+    BookMark = "",
+    BoxChecked = "",
+    Bug = "",
+    Stacks = "",
+    Scopes = "",
+    Watches = "󰂥",
+    DebugConsole = "",
+    Calendar = "",
+    Check = "",
+    ChevronRight = "",
+    ChevronShortDown = "",
+    ChevronShortLeft = "",
+    ChevronShortRight = "",
+    ChevronShortUp = "",
+    Circle = " ",
+    Close = "󰅖",
+    CloudDownload = "",
+    Code = "",
+    Comment = "",
+    Dashboard = "",
+    DividerLeft = "",
+    DividerRight = "",
+    DoubleChevronRight = "»",
+    Ellipsis = "",
+    EmptyFolder = "",
+    EmptyFolderOpen = "",
+    File = "",
+    FileSymlink = "",
+    Files = "",
+    FindFile = "󰈞",
+    FindText = "󰊄",
+    Fire = "",
+    Folder = "󰉋",
+    FolderOpen = "",
+    FolderSymlink = "",
+    Forward = "",
+    Gear = "",
+    History = "",
+    Lightbulb = "",
+    LineLeft = "▏",
+    LineMiddle = "│",
+    List = "",
+    Lock = "",
+    NewFile = "",
+    Note = "",
+    Package = "",
+    Pencil = "󰏫",
+    Plus = "",
+    Project = "",
+    Search = "",
+    SignIn = "",
+    SignOut = "",
+    Tab = "󰌒",
+    Table = "",
+    Target = "󰀘",
+    Telescope = "",
+    Text = "",
+    Tree = "",
+    Triangle = "󰐊",
+    TriangleShortArrowDown = "",
+    TriangleShortArrowLeft = "",
+    TriangleShortArrowRight = "",
+    TriangleShortArrowUp = "",
+  },
+}
+
 -- Plugins.
 require("lazy").setup({
   -- editorconfig is supported out of the box under neovim 0.9+
@@ -80,6 +162,9 @@ require("lazy").setup({
 
   {
     'nvim-treesitter/nvim-treesitter',
+    dependencies = {
+      'JoosepAlviste/nvim-ts-context-commentstring',
+    },
     build = ':TSUpdate',
     config = function()
       require'nvim-treesitter.configs'.setup {
@@ -116,7 +201,7 @@ require("lazy").setup({
       -- UI status updates from LSP
       {
         'j-hui/fidget.nvim',
-        tag = "legacy",
+        tag = 'v1.4.1'
       },
     },
     config = function()
@@ -125,7 +210,7 @@ require("lazy").setup({
       require('mason').setup()
       require('mason-lspconfig').setup({
         ensure_installed = {
-          "dockerls", "pyright", "rust_analyzer", "eslint", "yamlls"
+          "dockerls", "pyright", "rust_analyzer", "eslint", "yamlls", "lua_ls"
         },
       })
       require('mason-lspconfig').setup_handlers {
@@ -150,8 +235,9 @@ require("lazy").setup({
         cmd = { "DapInstall", "DapUninstall" },
         opts = { automatic_setup = true },
       },
-      { 
+      {
         "rcarriga/nvim-dap-ui",
+        dependencies = { 'nvim-neotest/nvim-nio' },
         config = function()
           require('dapui').setup()
         end
@@ -174,8 +260,7 @@ require("lazy").setup({
       { "saadparwaiz1/cmp_luasnip" },
       -- snippets
       {
-        'L3MON4D3/LuaSnip', 
-        version = "v1.2.1", 
+        'L3MON4D3/LuaSnip',
       },
       {'honza/vim-snippets'},
       {'rafamadriz/friendly-snippets'},
@@ -230,8 +315,11 @@ require("lazy").setup({
         formatting = {
           format = lspkind.cmp_format({
             mode = 'symbol', -- show only symbol annotations
-            maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
           })
+        },
+        window = {
+          completion = cmp.config.window.bordered(),
+          documentation = cmp.config.window.bordered(),
         },
         snippet = {
           expand = function(args)
@@ -274,92 +362,91 @@ require("lazy").setup({
   },
 
   -- UI
+
   {
     'projekt0n/github-nvim-theme',
     lazy = false,
-    branch = '0.0.x',
+    priority = 1000,
     config = function()
       require("github-theme").setup({
-        hide_inactive_statusline = false,
-        dark_float = true,
-        dark_sidebar = true,
+        options = {
+          darken = {
+            sidebars = {
+              enabled = true,
+            }
+          },
+        }
       })
 
-      vim.cmd('colorscheme github_dimmed')
-      vim.cmd('highlight FoldColumn guibg=#22272e guifg=#909dab')
+      vim.cmd('colorscheme github_dark')
+      --vim.cmd('highlight FoldColumn guibg=#22272e guifg=#909dab')
     end,
   },
 
   {
     "nvim-lualine/lualine.nvim",
-    dependencies = {
-      {'projekt0n/github-nvim-theme'},
-      {'nvim-tree/nvim-tree.lua'}
-    },
-    config = function()
-      require("lualine").setup {
+    opts = {
         options = {
           theme = "auto",
-          extensions = {'nvim-tree'},
+          extensions = {
+            'nvim-tree',
+          },
+
+          icons_enabled = true,
+          component_separators = { left = "", right = "" },
+          section_separators = { left = "", right = "" },
+          disabled_filetypes = {
+            statusline = { "dashboard", "lazy", "alpha" },
+          },
+          ignore_focus = {},
+          always_divide_middle = true,
           globalstatus = true,
+          refresh = {
+            statusline = 1000,
+            tabline = 1000,
+            winbar = 100,
+          },
         },
+        tabline = {},
+        extensions = {},
       }
-    end
   },
 
-  { 
-    'romgrk/barbar.nvim',
+  {
+    "akinsho/bufferline.nvim",
     config = function()
-      require('barbar').setup {
-        animation = false,
-        auto_hide = false,
+      local bufferline = require('bufferline')
 
-        hide = {
-          extensions = true
-        },
-        icons = {
-          button = '',
-          -- Enables / disables diagnostic symbols
-          diagnostics = {
-            [vim.diagnostic.severity.ERROR] = {enabled = true, icon = 'ﬀ'},
-            [vim.diagnostic.severity.WARN] = {enabled = false},
-            [vim.diagnostic.severity.INFO] = {enabled = false},
-            [vim.diagnostic.severity.HINT] = {enabled = false},
-          },
-          filetype = {
-            -- Sets the icon's highlight group.
-            -- If false, will use nvim-web-devicons colors
-            custom_colors = false,
-
-            -- Requires `nvim-web-devicons` if `true`
-            enabled = true,
+      bufferline.setup({
+        options = {
+          diagnostics = "nvim_lsp",
+          always_show_bufferline = true,
+          indicator = {
+            icon = icons.ui.BoldLineLeft,
+            style = 'icon',
           },
 
-          -- custom separator icons/characters
+          style_preset = bufferline.style_preset.no_italic,
 
-          separator = {left = '', right = '│'},
+          separator = {left = icons.ui.DividerLeft, right = icons.ui.DividerRight},
+          buffer_close_icon = icons.ui.Close,
+          modified_icon = icons.ui.Circle,
+          close_icon = icons.ui.BoldClose,
+          left_trunc_marker = icons.ui.ArrowCircleLeft,
+          right_trunc_marker = icons.ui.ArrowCircleRight,
 
-          -- Configure the icons on the bufferline when modified or pinned.
-          -- Supports all the base icon options.
-          modified = {button = '●'},
-          pinned = {
-            buffer_index = true, filename = true, button = '', separator = { right = '│', left = ''} 
+          offsets = {
+            {
+              filetype = "neo-tree",
+              text_align = "center",
+              text = "Explorer",
+              padding = 0,
+              separator = true,
+            },
           },
-
-          -- Configure the icons on the bufferline based on the visibility of a buffer.
-          -- Supports all the base icon options, plus `modified` and `pinned`.
-          alternate = {filetype = {enabled = false}},
-          inactive = {button = '', separator = {left = '', right = '│'}},
         },
-        sidebar_filetypes = {
-          NvimTree = true
-        },
-        -- icon_pinned = '󰐃',
-        exclude_ft = {'netrw'},
-        -- closable = false,
-        highlight_visible = false,
-      }
-    end
+      })
+    end,
   },
 
   {
@@ -383,114 +470,79 @@ require("lazy").setup({
   },
 
   {
-    'nvim-tree/nvim-tree.lua',
+    "folke/todo-comments.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+  },
+
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
     dependencies = {
-      'nvim-tree/nvim-web-devicons'
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+      "MunifTanjim/nui.nvim",
     },
     config = function()
-      require'nvim-tree'.setup {
-        git = {
-          enable = true,
-          ignore = false,
+      require('neo-tree').setup({
+        sources = { "filesystem", "buffers", "git_status" },
+        source_selector = {
+          winbar = true,
+          statusline = false
         },
-        update_focused_file = {
-          enable = true,
-        },
-        actions = {
-          open_file = {
-            resize_window = false
-          }
-        }
-      }
 
-      vim.api.nvim_set_keymap("", "<Leader>nt", "<cmd>NvimTreeToggle<CR>", { })
+        filesystem = {
+          filtered_items = {
+            visible = true, -- when true, they will just be displayed differently than normal items
+            hide_dotfiles = false,
+            hide_gitignored = false,
+            hide_hidden = false, -- only works on Windows for hidden files/directories
+          },
+          follow_current_file = {
+            enabled = true,
+          },
+          use_libuv_file_watcher = true,
+        }
+      })
+      vim.api.nvim_set_keymap("", "<Leader>nt", "<cmd>Neotree toggle<CR>", { })
     end
   },
 
   {
     'lewis6991/gitsigns.nvim',
-    config = true
+    config = function()
+      require('gitsigns').setup()
+    end
   },
 
   {
     "luukvbaal/statuscol.nvim",
-    event = "VimEnter",
-    opts = function()
-      local builtin = require("statuscol.builtin")
-      return {
-        relculright = true,
-        setopt = true,
-        segments = {
-          {
-            sign = {
-              name = {
-                "Diagnostic"
-              },
-              maxwidth = 1,
-              colwidth = 2,
-              auto = false,
-            },
-            click = "v:lua.ScSa",
-          },
-          { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
-          {
-            sign = {
-              name = { "GitSigns" },
-              maxwidth = 1,
-              colwidth = 1,
-              auto = false,
-              fillchar = "│",
-              fillcharhl = "StatusColumnSeparator",
-            },
-            click = "v:lua.ScSa",
-          },
-          { 
-            text = { builtin.foldfunc }, 
-            click = "v:lua.ScFa",
-          },
-          { 
-            text = { " " }, 
-          },
-
-        },
-        ft_ignore = {
-          "help",
-          "vim",
-          "NvimTree",
-          "lazy",
-          "toggleterm",
-        },
-        bt_ignore = {"terminal", "nofile"},
-      }
+    config = function()
+      require("statuscol").setup {}
     end,
   },
 
   {
-    "kevinhwang91/nvim-ufo",
-    event = "VimEnter",
-    dependencies = {
-      "kevinhwang91/promise-async"
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    opts = {
+      indent = { char = icons.ui.LineLeft },
+      scope = { show_start = false, show_end = false },
+      exclude = {
+        buftypes = {
+          "nofile",
+          "prompt",
+          "quickfix",
+          "terminal",
+        },
+        filetypes = {
+          "help",
+          "lazy",
+          "mason",
+          "neo-tree",
+        },
+      },
     },
-    config = function() 
-      require('ufo').setup({
-        provider_selector = function(bufnr, filetype, buftype)
-          return {'treesitter', 'indent'}
-        end
-      })
-      -- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
-      vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
-      vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
-
-      -- ufo
-      vim.o.foldcolumn = '1' -- '0' is not bad
-      vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
-      vim.o.foldlevelstart = 99
-      vim.o.foldenable = true
-      vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
-    end
   },
-
-  { "lukas-reineke/indent-blankline.nvim" },
 
   -- Temporary workaround for netrw bug
   { 'felipec/vim-sanegx' },
