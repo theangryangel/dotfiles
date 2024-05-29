@@ -3,7 +3,8 @@ return {
   dependencies = {
     { "hrsh7th/cmp-buffer" },
     { "hrsh7th/cmp-nvim-lsp" },
-    { "hrsh7th/cmp-nvim-lsp-signature-help" },
+    -- XXX: Signature help has been moved to noice.nvim for now
+    -- { "hrsh7th/cmp-nvim-lsp-signature-help" },
     { "hrsh7th/cmp-buffer" },
     { "hrsh7th/cmp-path" },
     { 'hrsh7th/cmp-emoji' },
@@ -18,9 +19,6 @@ return {
     {'rafamadriz/friendly-snippets'},
   },
   config = function()
-    -- XXX: experimental effort to change from virtual_text to hover.
-    -- vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
-
     vim.api.nvim_create_autocmd('LspAttach',  {
       desc = "LSP Actions",
       callback = function(args)
@@ -81,7 +79,6 @@ return {
       }),
       sources = cmp.config.sources({
         { name = 'nvim_lsp' },
-        { name = 'nvim_lsp_signature_help' },
         { name = 'luasnip' },
         { name = 'emoji' },
         { name = 'buffer' },

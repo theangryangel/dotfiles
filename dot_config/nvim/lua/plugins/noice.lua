@@ -3,7 +3,7 @@ return {
 	event = "VeryLazy",
   -- FIXME: noice interacts with cmp in such a way that I get 2 completion popups. I
   -- don't have time to find out why now.
-	enabled = false,
+	enabled = true,
 	opts = {
 		-- add any options here
 	},
