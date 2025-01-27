@@ -1,19 +1,15 @@
 return {
   'neovim/nvim-lspconfig',
+  event = "VeryLazy",
   dependencies = {
     'williamboman/mason.nvim',
     'williamboman/mason-lspconfig.nvim',
     "folke/neodev.nvim",
-    -- UI status updates from LSP
-    -- Replaced by noice
-    -- {
-    --   'j-hui/fidget.nvim',
-    --   tag = 'v1.4.1'
-    -- },
+    { 'j-hui/fidget.nvim', tag = 'v1.4.5' },
   },
   config = function()
     -- LSP setup
-    -- require("fidget").setup()
+    require("fidget").setup {}
     require("mason").setup({
       ui = {
         border = "rounded",
@@ -53,18 +49,29 @@ return {
     end
 
     vim.diagnostic.config({
-      virtual_text = true,
+      virtual_text = false,
       signs = true,
       underline = true,
       update_in_insert = true,
       severity_sort = true,
-      float = {
-        source = "always",
-        style = "minimal",
-        border = "rounded",
-        header = "",
-        prefix = "",
-      },
     })
+
+    -- Show diagnostics on hover instead of virtual_text
+    vim.api.nvim_create_autocmd("CursorHold", {
+      buffer = bufnr,
+      callback = function()
+        local opts = {
+          focusable = false,
+          close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+          border = 'rounded',
+          source = 'always',
+          prefix = '',
+          scope = 'cursor',
+          style = 'minimal',
+        }
+        vim.diagnostic.open_float(nil, opts)
+      end
+    })
+
   end
 }

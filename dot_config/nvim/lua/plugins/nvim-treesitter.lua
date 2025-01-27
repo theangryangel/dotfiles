@@ -12,6 +12,7 @@ return {
         enable = true,
         disable = {},
       },
+      ident = { enable = false },
     }
   end
 }

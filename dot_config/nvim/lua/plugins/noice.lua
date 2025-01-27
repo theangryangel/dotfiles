@@ -1,9 +1,10 @@
 return {
 	"folke/noice.nvim",
 	event = "VeryLazy",
-  -- FIXME: noice interacts with cmp in such a way that I get 2 completion popups. I
-  -- don't have time to find out why now.
-	enabled = true,
+  -- XXX: Disabled as I'm struggling with the notification mechanism.
+  -- it's either displaying far too short of a time, or too long and 
+  -- its often intrusive.
+	enabled = false,
 	opts = {
 		-- add any options here
 	},
@@ -29,19 +30,19 @@ return {
 					},
 				},
 			},
-			routes = {
-				{
-					filter = {
-						event = "msg_show",
-						kind = "",
-						find = "written",
-					},
-					opts = { skip = true },
-				},
-			},
+			-- routes = {
+			-- 	{
+			-- 		filter = {
+			-- 			event = "msg_show",
+			-- 			kind = "",
+			-- 			find = "written",
+			-- 		},
+			-- 		opts = { skip = true },
+			-- 	},
+			-- },
 			lsp = {
 				Progress = {
-					enabled = true,
+					enabled = false,
 					-- Lsp Progress is formatted using the builtins for lsp_progress. See config.format.builtin
 					-- See the section on formatting for more details on how to customize.
 					format = "lsp_progress",
@@ -55,11 +56,12 @@ return {
 					["cmp.entry.get_documentation"] = true,
 				},
 			},
-			mini = {
-				win_options = {
-					winblend = 0,
-				},
-			},
+      presets = {
+        bottom_search = true, -- use a classic bottom cmdline for search
+        command_palette = true, -- position the cmdline and popupmenu together
+        long_message_to_split = true, -- long messages will be sent to a split
+        lsp_doc_border = true, -- add a border to hover docs and signature help
+      },
 		})
 	end,
 }
