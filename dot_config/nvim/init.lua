@@ -32,6 +32,7 @@ local options = {
   updatetime = 250, -- Decrease update time
   signcolumn = 'yes',
   completeopt = 'menu,menuone,noselect',
+  diffopt = "internal,filler,closeoff,linematch:60",  -- improve diff
 }
 
 -- Set options
