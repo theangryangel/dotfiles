@@ -103,4 +103,4 @@ alias docker-compose="docker compose --compatibility $@"
 . "$HOME/.cargo/env"
 
 [[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
-command -v atuin && eval "$(atuin init bash --disable-up-arrow)"
+eval "$(~/.atuin/bin/atuin init bash --disable-up-arrow)"
