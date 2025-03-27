@@ -1,6 +1,6 @@
 return {
   "hrsh7th/nvim-cmp",
-  enable = false,
+  enabled = false,
   event = "VeryLazy",
   dependencies = {
     { "hrsh7th/cmp-buffer" },

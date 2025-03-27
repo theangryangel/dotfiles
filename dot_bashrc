@@ -29,6 +29,11 @@ if [ -n "$GOPATH" ]; then
   pathappend $GOPATH
 fi
 
+# additional npm path (Linux)
+if [ -d ~/.local/share/npm/bin ]; then
+  pathappend ~/.local/share/npm/bin/
+fi
+
 export PATH
 
 # don't put duplicate lines or lines starting with space in the history.

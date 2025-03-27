@@ -20,7 +20,7 @@ return {
     -- C-k: Toggle signature help (if signature.enabled = true)
     --
     -- See :h blink-cmp-config-keymap for defining your own keymap
-    keymap = { preset = 'default' },
+    keymap = { preset = 'enter' },
 
     appearance = {
       -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
@@ -45,7 +45,7 @@ return {
     fuzzy = { implementation = "prefer_rust_with_warning" },
 
     -- enable lsp signature help
-    signature = { enabled = false },
+    signature = { enabled = true },
   },
   opts_extend = { "sources.default" }
 }
