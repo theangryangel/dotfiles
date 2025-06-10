@@ -5,7 +5,7 @@ return {
     'rafamadriz/friendly-snippets',
   },
 
-  version = '1.*',
+  version = '1.2.0',
 
   opts = {
     -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
@@ -28,8 +28,10 @@ return {
       nerd_font_variant = 'mono'
     },
 
-    -- Show the documentation popup automatically
-    completion = { documentation = { auto_show = true } },
+    completion = { 
+      -- Show the documentation popup automatically
+      documentation = { auto_show = true } 
+    },
 
     -- Default list of enabled providers defined so that you can extend it
     -- elsewhere in your config, without redefining it, due to `opts_extend`
@@ -46,6 +48,12 @@ return {
 
     -- enable lsp signature help
     signature = { enabled = true },
+
+    -- make the cmdline work like the default out of box experience
+    cmdline = {
+      keymap = { preset = 'inherit' },
+      completion = { menu = { auto_show = false } },
+    },
   },
   opts_extend = { "sources.default" }
 }

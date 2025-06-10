@@ -5,7 +5,7 @@ return {
     -- 'williamboman/mason.nvim',
     -- 'williamboman/mason-lspconfig.nvim',
     "folke/neodev.nvim",
-    { 'j-hui/fidget.nvim', tag = 'v1.4.5' },
+    { 'j-hui/fidget.nvim', tag = 'v1.6.1' },
     'kosayoda/nvim-lightbulb',
   },
   config = function()
@@ -69,7 +69,8 @@ return {
     })
 
     vim.diagnostic.config({
-      virtual_lines = false,
+      virtual_lines = { current_line = true },
+      virtual_text = true,
       signs = true,
       underline = true,
       update_in_insert = true,

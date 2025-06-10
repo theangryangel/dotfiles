@@ -30,3 +30,5 @@
 	gpgSign = true
 [gpg]
 	format = ssh
+[rebase]
+	instructionFormat = (%an <%ae>) %s
