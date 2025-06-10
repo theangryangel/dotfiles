@@ -2,8 +2,6 @@ return {
   'neovim/nvim-lspconfig',
   event = "VeryLazy",
   dependencies = {
-    -- 'williamboman/mason.nvim',
-    -- 'williamboman/mason-lspconfig.nvim',
     "folke/neodev.nvim",
     { 'j-hui/fidget.nvim', tag = 'v1.6.1' },
     'kosayoda/nvim-lightbulb',
@@ -11,41 +9,6 @@ return {
   config = function()
     -- LSP setup
     require("fidget").setup {}
-    -- require("mason").setup({
-    --   ui = {
-    --     border = "rounded",
-    --     icons = {
-    --       package_installed = "✓",
-    --       package_pending = "➜",
-    --       package_uninstalled = "✗",
-    --     },
-    --   },
-    -- })
-    -- require('mason-lspconfig').setup({
-    --   ensure_installed = {
-    --     -- "dockerls", 
-    --     -- "pyright", 
-    --     -- XXX: trying out ~/.config/nvim/lsp/
-    --     --"rust_analyzer", 
-    --     -- "eslint", 
-    --     -- "yamlls", 
-    --     "lua_ls"
-    --   },
-    -- })
-
-    -- local capabilities = vim.lsp.protocol.make_client_capabilities()
-    -- capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
-
-    -- require('mason-lspconfig').setup_handlers {
-    --   -- fallback handler.
-    --   function (server_name)
-    --     require('lspconfig')[server_name].setup{
-    --       capabilities = capabilities
-    --     }
-    --   end,
-    -- }
-
-    require("lspconfig.ui.windows").default_options.border = "single"
 
     require("neodev").setup()
 
@@ -56,17 +19,15 @@ return {
     end
 
     -- XXX: Assumes that we've manually installed all of these
-    vim.lsp.enable({
-      "css", -- npm install -g vscode-langservers-extracted
-      "dockerls",  -- npm install -g
-      "eslint", -- npm install -g vscode-langservers-extracted
-      "markdown", -- npm install -g vscode-langservers-extracted
-      "pyright",   -- pipx install pyright debugpy
-      "ruff", -- uv tool install ruff
-      "rust-analyzer", -- rustup
-      "typescript", -- npm install -g
-      "yamlls", -- npm install -g
-    })
+    vim.lsp.enable("cssls") -- npm install -g vscode-langservers-extracted
+    vim.lsp.enable("dockerls")  -- npm install -g
+    vim.lsp.enable("eslint") -- npm install -g vscode-langservers-extracted
+    vim.lsp.enable("markdown") -- npm install -g vscode-langservers-extracted
+    vim.lsp.enable("pyright")   -- uv tool install pyright debugpy
+    vim.lsp.enable("ruff") -- uv tool install ruff
+    vim.lsp.enable('rust_analyzer') -- rustup
+    vim.lsp.enable("ts_ls") -- npm install -g
+    vim.lsp.enable("yamlls") -- npm install -g
 
     vim.diagnostic.config({
       virtual_lines = { current_line = true },
