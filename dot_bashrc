@@ -106,6 +106,6 @@ command -v kubectl >/dev/null && . <(kubectl completion bash)
 
 alias docker-compose="docker compose --compatibility $@"
 . "$HOME/.cargo/env"
-
+. "$HOME/.atuin/bin/env"
 [[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
 eval "$(~/.atuin/bin/atuin init bash --disable-up-arrow)"

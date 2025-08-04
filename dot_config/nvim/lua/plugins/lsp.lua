@@ -28,6 +28,7 @@ return {
     vim.lsp.enable('rust_analyzer') -- rustup
     vim.lsp.enable("ts_ls") -- npm install -g
     vim.lsp.enable("yamlls") -- npm install -g
+    -- vim.lsp.enable("ty") -- uv tool install ty
 
     vim.diagnostic.config({
       virtual_lines = { current_line = true },
