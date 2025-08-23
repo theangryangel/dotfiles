@@ -10,10 +10,6 @@ pathappend() {
   done
 }
 
-if [ -f ~/.bashrc_local ]; then
-	source ~/.bashrc_local
-fi
-
 # additional local path (Linux)
 if [ -d ~/.local/bin ]; then
   pathappend ~/.local/bin
@@ -51,16 +47,6 @@ HISTFILESIZE=2000
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
-
-PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-
 # aliases
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
@@ -77,35 +63,16 @@ if [ -f /usr/share/bash-completion/bash_completion ] && ! shopt -oq posix; then
     . /usr/share/bash-completion/bash_completion
 fi
 
-export COMPOSE_IMPERSONATION='1000:1000'
-
 if [ -x "$(command -v starship)" ]; then
   unset PROMPT_COMMAND
   eval "$(starship init bash)"
 fi
 
-export SSH_AUTH_SOCK=~/.ssh/ssh-agent.$HOSTNAME.sock
-ssh-add -l 2>/dev/null >/dev/null
-if [ $? -ge 2 ]; then
-  ssh-agent -a "$SSH_AUTH_SOCK" >/dev/null
-  ssh-add ~/.ssh/id_rsa
-fi
+[ -f "HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+command -v atuin >/dev/null && eval "$(atuin init bash --disable-up-arrow)"
 
-if test -n "$KITTY_INSTALLATION_DIR" -a -e "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; then source "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; fi
-
-if [ -x "$(command -v invoke)" ]; then
-  eval "$(invoke --print-completion-script=bash)"
-fi
-
-if [ -x "$(command -v pipx)" ]; then
-  eval "$(register-python-argcomplete pipx)"
-fi
-
+# Extra completions
+command -v invoke >/dev/null && eval "$(invoke --print-completion-script=bash)"
+command -v pipx >/dev/null && eval "$(register-python-argcomplete pipx)"
 command -v flux >/dev/null && . <(flux completion bash)
 command -v kubectl >/dev/null && . <(kubectl completion bash)
-
-alias docker-compose="docker compose --compatibility $@"
-. "$HOME/.cargo/env"
-. "$HOME/.atuin/bin/env"
-[[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
-eval "$(~/.atuin/bin/atuin init bash --disable-up-arrow)"
