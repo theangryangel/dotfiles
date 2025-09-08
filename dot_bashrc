@@ -68,11 +68,14 @@ if [ -x "$(command -v starship)" ]; then
   eval "$(starship init bash)"
 fi
 
-[ -f "HOME/.cargo/env" ] && . "$HOME/.cargo/env"
-command -v atuin >/dev/null && eval "$(atuin init bash --disable-up-arrow)"
+# clear the command cache so that atuin, etc. works properly
+hash -r
 
-# Extra completions
-command -v invoke >/dev/null && eval "$(invoke --print-completion-script=bash)"
-command -v pipx >/dev/null && eval "$(register-python-argcomplete pipx)"
-command -v flux >/dev/null && . <(flux completion bash)
-command -v kubectl >/dev/null && . <(kubectl completion bash)
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+[ -f "$HOME/.atuin/bin/env" ] && . "$HOME/.atuin/bin/env"
+
+which atuin >/dev/null && eval "$(atuin init bash --disable-up-arrow)"
+which invoke >/dev/null && eval "$(invoke --print-completion-script=bash)"
+which pipx >/dev/null && eval "$(register-python-argcomplete pipx)"
+which flux >/dev/null && . <(flux completion bash)
+which kubectl >/dev/null && . <(kubectl completion bash)
