@@ -74,8 +74,8 @@ hash -r
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 [ -f "$HOME/.atuin/bin/env" ] && . "$HOME/.atuin/bin/env"
 
-which atuin >/dev/null && eval "$(atuin init bash --disable-up-arrow)"
-which invoke >/dev/null && eval "$(invoke --print-completion-script=bash)"
-which pipx >/dev/null && eval "$(register-python-argcomplete pipx)"
-which flux >/dev/null && . <(flux completion bash)
-which kubectl >/dev/null && . <(kubectl completion bash)
+which atuin >/dev/null 2>&1 && eval "$(atuin init bash --disable-up-arrow)"
+which invoke >/dev/null  2>&1&& eval "$(invoke --print-completion-script=bash)"
+which pipx >/dev/null 2>&1 && eval "$(register-python-argcomplete pipx)"
+which flux >/dev/null 2>&1 && . <(flux completion bash)
+which kubectl >/dev/null 2>&1 && . <(kubectl completion bash)
