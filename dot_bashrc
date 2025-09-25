@@ -71,8 +71,10 @@ fi
 # clear the command cache so that atuin, etc. works properly
 hash -r
 
-[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
-[ -f "$HOME/.atuin/bin/env" ] && . "$HOME/.atuin/bin/env"
+[[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
+
+[[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
+[[ -f "$HOME/.atuin/bin/env" ]] && source "$HOME/.atuin/bin/env"
 
 which atuin >/dev/null 2>&1 && eval "$(atuin init bash --disable-up-arrow)"
 which invoke >/dev/null  2>&1&& eval "$(invoke --print-completion-script=bash)"
