@@ -18,7 +18,7 @@ end
 vim.lsp.enable("cssls") -- npm install -g vscode-langservers-extracted
 vim.lsp.enable("dockerls")  -- npm install -g
 vim.lsp.enable("eslint") -- npm install -g vscode-langservers-extracted
-vim.lsp.enable("markdown") -- npm install -g vscode-langservers-extracted
+vim.lsp.enable("marksman") -- brew/cargo install marksman
 vim.lsp.enable("pyright")   -- uv tool install pyright debugpy
 vim.lsp.enable("ruff") -- uv tool install ruff
 vim.lsp.enable('rust_analyzer') -- rustup
@@ -28,7 +28,7 @@ vim.lsp.enable("yamlls") -- npm install -g
 
 vim.diagnostic.config({
   virtual_lines = { current_line = true },
-  virtual_text = true,
+  virtual_text = false,
   signs = true,
   underline = true,
   update_in_insert = true,
@@ -54,6 +54,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
     map('<leader>ws', function() Snacks.picker.lsp_workspace_symbols() end, '[W]orkspace [S]ymbols')
     map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
     map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
+    map('<leader>ih', function()
+      vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }), { bufnr = event.buf })
+    end, 'Toggle [I]nlay [H]ints')
 
     local client = vim.lsp.get_client_by_id(event.data.client_id)
     if client and client.supports_method('textDocument/documentHighlight') then
