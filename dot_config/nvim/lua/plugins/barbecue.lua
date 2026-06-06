@@ -1,12 +1,5 @@
-return {
-  "utilyre/barbecue.nvim",
-  event = "VeryLazy",
-  name = "barbecue",
-  dependencies = {
-    "SmiteshP/nvim-navic",
-    "nvim-tree/nvim-web-devicons", -- optional dependency
-  },
-  opts = {
-    -- configurations go here
-  },
-}
+vim.pack.add({ 'https://github.com/SmiteshP/nvim-navic' })
+vim.pack.add({ 'https://github.com/nvim-tree/nvim-web-devicons' })
+vim.pack.add({ 'https://github.com/utilyre/barbecue.nvim' })
+
+require('barbecue').setup {}

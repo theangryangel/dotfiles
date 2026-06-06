@@ -1,12 +1,10 @@
--- Remapping leader, etc. to ensure that any plugins use the correct
--- configuration
 vim.g.mapleader = ','
 vim.g.maplocalleader = ','
 
 local options = {
-  shortmess = "atIc", -- Don't show the Vim intro message
-  backup = false, -- no file system spam pls
-  backupcopy = "yes", -- fix file watchers
+  shortmess = "atIc",
+  backup = false,
+  backupcopy = "yes",
   title = true,
   expandtab = true,
   tw = 88,
@@ -21,66 +19,49 @@ local options = {
   termguicolors = true,
   clipboard = 'unnamedplus',
   backspace = "indent,eol,start",
-  hlsearch = true,  -- Set highlight on search,
+  hlsearch = true,
   incsearch = true,
-  ignorecase = true, -- Case insensitive searching UNLESS /C or capital in search,
+  ignorecase = true,
   smartcase = true,
-  number = true, -- Make line numbers default,
-  mouse = 'a',  -- Enable mouse mode,
-  breakindent = true, -- Enable break indent,
-  undofile = true, -- Save undo history
-  updatetime = 250, -- Decrease update time
+  number = true,
+  mouse = 'a',
+  breakindent = true,
+  undofile = true,
+  updatetime = 250,
   signcolumn = 'yes',
   completeopt = 'menu,menuone,noselect',
-  diffopt = "internal,filler,closeoff,linematch:60",  -- improve diff
+  diffopt = "internal,filler,closeoff,linematch:60",
 }
 
--- Set options
 for k, v in pairs(options) do
   vim.opt[k] = v
 end
 
--- Are we GUI?
 if vim.g.neovide then
   require('neovide')
 end
 
--- Bootstrap lazy.nvim
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "--single-branch",
-    "https://github.com/folke/lazy.nvim.git",
-    lazypath,
-  })
+require('vim._core.ui2').enable({
+  enable = true, -- Whether to enable or disable the UI.
+})
+
+-- Colourscheme loaded first so everything else inherits the right highlight groups
+vim.pack.add({ 'https://github.com/projekt0n/github-nvim-theme' })
+require("github-theme").setup({
+  options = {
+    darken = {
+      sidebars = {
+        enable = true,
+      }
+    },
+  }
+})
+vim.cmd('colorscheme github_dark_dimmed')
+
+for _, file in ipairs(vim.fn.glob(vim.fn.stdpath('config') .. '/lua/plugins/*.lua', false, true)) do
+  dofile(file)
 end
 
-vim.opt.runtimepath:prepend(lazypath)
-
-require("lazy").setup("plugins", {
-	install = {
-		missing = true,
-	},
-	checker = {
-		enabled = true,
-		notify = true,
-    check_pinned = true,
-	},
-	ui = {
-		border = "rounded",
-	},
-	performance = {
-		rtp = {
-			disabled_plugins = {
-				"gzip",
-				"tarPlugin",
-				"tohtml",
-				"tutor",
-				"zipPlugin",
-			},
-		},
-	},
-})
+vim.api.nvim_create_user_command('PackUpdate', function()
+  vim.pack.update()
+end, {})

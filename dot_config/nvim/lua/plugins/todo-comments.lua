@@ -1,6 +1,4 @@
-return {
-  "folke/todo-comments.nvim",
-  event = "VeryLazy",
-  dependencies = { "nvim-lua/plenary.nvim" },
-  opts = {},
-}
+vim.pack.add({ 'https://github.com/nvim-lua/plenary.nvim' })
+vim.pack.add({ 'https://github.com/folke/todo-comments.nvim' })
+
+require('todo-comments').setup {}

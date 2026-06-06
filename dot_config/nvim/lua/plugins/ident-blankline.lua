@@ -1,19 +1,16 @@
-return {
-  "lukas-reineke/indent-blankline.nvim",
-  main = "ibl",
-  opts = {
-    exclude = {
-      buftypes = {
-        "nofile",
-        "prompt",
-        "quickfix",
-        "terminal",
-      },
-      filetypes = {
-        "help",
-        "lazy",
-        "neo-tree",
-      },
+vim.pack.add({ 'https://github.com/lukas-reineke/indent-blankline.nvim' })
+
+require('ibl').setup({
+  exclude = {
+    buftypes = {
+      "nofile",
+      "prompt",
+      "quickfix",
+      "terminal",
+    },
+    filetypes = {
+      "help",
+      "neo-tree",
     },
   },
-}
+})
